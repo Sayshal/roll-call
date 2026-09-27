@@ -1,0 +1,39 @@
+{
+  "authors": [
+    {
+      "discord": "Tyler",
+      "flags": {},
+      "name": "Tyler",
+      "url": "https://github.com/Sayshal"
+    }
+  ],
+  "bugs": "https://github.com/Sayshal/roll-call/issues",
+  "changelog": "https://github.com/Sayshal/roll-call/releases",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.367"
+  },
+  "description": "",
+  "download": "",
+  "esmodules": ["roll-call.mjs"],
+  "flags": {
+    "hotReload": {
+      "extensions": ["css", "html", "hbs", "json"],
+      "paths": ["styles", "templates", "lang"]
+    }
+  },
+  "id": "roll-call",
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "manifest": "https://github.com/Sayshal/roll-call/releases/latest/download/module.json",
+  "readme": "https://github.com/Sayshal/roll-call?tab=readme-ov-file",
+  "styles": ["styles/roll-call.css"],
+  "title": "Roll Call",
+  "url": "https://github.com/Sayshal/roll-call",
+  "version": ""
+}

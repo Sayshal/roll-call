@@ -1,0 +1,217 @@
+name: Release Creation
+
+on:
+  push:
+    tags:
+      - 'release-*'
+
+env:
+  REPO_URL: https://github.com/${{ github.repository }}
+  # Per-repo values. Nothing else in this file may differ between repos.
+  PREMIUM: 'false'
+  PING_ROLES: '1384920094597185556 1474661656737878196'
+  ACCENT_COLOR: '0xe53935'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Read module ID from module.json
+      - name: Get module ID
+        id: module_id
+        run: echo "id=$(jq -r '.id' module.json)" >> $GITHUB_OUTPUT
+
+      # Extract version from tag (release-X.Y.Z -> X.Y.Z)
+      - name: Set up variables
+        id: get_vars
+        run: |
+          TAG=${GITHUB_REF/refs\/tags\//}
+          VERSION=${TAG#release-}
+          MODULE_ID=${{ steps.module_id.outputs.id }}
+          echo "TAG_NAME=$TAG" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "MODULE_ID=$MODULE_ID" >> $GITHUB_ENV
+          echo "ZIP_NAME=module.zip" >> $GITHUB_ENV
+          echo "RELEASE_DOWNLOAD_URL=${{ env.REPO_URL }}/releases/download/$TAG/module.zip" >> $GITHUB_ENV
+          echo "RELEASE_MANIFEST_URL=${{ env.REPO_URL }}/releases/download/$TAG/module.json" >> $GITHUB_ENV
+          echo "LATEST_MANIFEST_URL=${{ env.REPO_URL }}/releases/latest/download/module.json" >> $GITHUB_ENV
+
+          echo "Tag: $TAG"
+          echo "Version: $VERSION"
+          echo "Module ID: $MODULE_ID"
+
+      # Build the module
+      - name: Build
+        run: npm run build
+
+      # Stamp the packaged manifest. Free modules distribute through GitHub releases;
+      # premium modules keep their Foundry-hosted manifest URL and gain the protected flag.
+      - name: Update module.json
+        run: |
+          jq --arg version "$VERSION" \
+             --arg download "$RELEASE_DOWNLOAD_URL" \
+             --arg manifest "$LATEST_MANIFEST_URL" \
+             --argjson premium "$PREMIUM" '
+            .version = $version
+            | if has("flags") and (.flags | has("hotReload")) then .flags.hotReload = false else . end
+            | if $premium then .protected = true else .download = $download | .manifest = $manifest end
+          ' dist/module.json > module.tmp.json
+          mv module.tmp.json dist/module.json
+          cat dist/module.json
+
+      # Verify the version in module.json matches the tag
+      - name: Verify version
+        run: |
+          MODULE_VERSION=$(jq -r '.version' dist/module.json)
+          if [[ ! "$MODULE_VERSION" == "${{ env.VERSION }}" ]]; then
+            echo "Error: module.json version ($MODULE_VERSION) does not match tag version (${{ env.VERSION }})"
+            exit 1
+          fi
+          echo "Version verified: $MODULE_VERSION"
+
+      # Create zip with module files
+      - name: Zip Files
+        working-directory: dist
+        run: zip -r ../${{ env.ZIP_NAME }} .
+
+      # Fetch existing release body if it exists
+      - name: Fetch Release Body
+        id: release
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag: ${{ env.TAG_NAME }}
+          doNotFailIfNotFound: true
+
+      # Update release with the built files
+      - name: Update Release with Files
+        id: create_version_release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          omitNameDuringUpdate: true
+          draft: false
+          prerelease: false
+          omitDraftDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: './dist/module.json, ./${{ env.ZIP_NAME }}'
+          tag: ${{ env.TAG_NAME }}
+          body: |
+            ${{ steps.release.outputs.body }}
+
+            **Installation:** To manually install this release, use the following manifest URL: ${{ env.RELEASE_MANIFEST_URL }}
+
+      # Read module metadata for later steps
+      - name: Read module metadata
+        id: module
+        run: |
+          echo "title=$(jq -r '.title' dist/module.json)" >> $GITHUB_OUTPUT
+          echo "compat_min=$(jq -r '.compatibility.minimum' dist/module.json)" >> $GITHUB_OUTPUT
+          echo "compat_verified=$(jq -r '.compatibility.verified' dist/module.json)" >> $GITHUB_OUTPUT
+          echo "compat_max=$(jq -r '.compatibility.maximum // empty' dist/module.json)" >> $GITHUB_OUTPUT
+
+      # Release to Foundry Package API (free modules only; premium uploads stay manual)
+      - name: Release Foundry Package
+        if: env.PREMIUM != 'true'
+        env:
+          FOUNDRY_API_TOKEN: ${{ secrets.FOUNDRY_API_TOKEN }}
+        run: |
+          jq -n \
+            --arg id "${{ env.MODULE_ID }}" \
+            --arg version "${{ env.VERSION }}" \
+            --arg manifest "${{ env.RELEASE_MANIFEST_URL }}" \
+            --arg download "${{ env.RELEASE_DOWNLOAD_URL }}" \
+            --arg notes "${{ env.REPO_URL }}/releases/tag/${{ env.TAG_NAME }}" \
+            --arg compat_min "${{ steps.module.outputs.compat_min }}" \
+            --arg compat_verified "${{ steps.module.outputs.compat_verified }}" \
+            --arg compat_max "${{ steps.module.outputs.compat_max }}" \
+            '{
+              id: $id,
+              release: {
+                version: $version,
+                manifest: $manifest,
+                download: $download,
+                notes: $notes,
+                compatibility: (
+                  {minimum: $compat_min, verified: $compat_verified}
+                  + (if $compat_max == "" then {} else {maximum: $compat_max} end)
+                )
+              }
+            }' > payload.json
+
+          cat payload.json
+
+          curl -sS --fail-with-body -X POST "https://foundryvtt.com/_api/packages/release_version/" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: $FOUNDRY_API_TOKEN" \
+            -d @payload.json
+
+      # Post the release card to Discord (Components v2, same shape as Mork/utils/premium-post.mjs)
+      - name: Post to Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          RELEASE_BODY: ${{ steps.release.outputs.body }}
+          MODULE_TITLE: ${{ steps.module.outputs.title }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+
+          def read(path):
+              if os.path.isfile(path) and os.path.getsize(path) > 0:
+                  with open(path, encoding='utf-8') as f:
+                      return f.read().strip()
+              return ''
+
+          # release_card.txt is the card body; fall back to the GitHub release body
+          body = read('release_card.txt') or os.environ.get('RELEASE_BODY', '').strip() or 'New release available!'
+
+          # Components v2 caps combined text content at 4000 characters
+          if len(body) > 3800:
+              body = body[:3797] + '...'
+
+          roles = os.environ['PING_ROLES'].split()
+          title = os.environ['MODULE_TITLE'] + ' v' + os.environ['VERSION']
+          package_url = 'https://foundryvtt.com/packages/' + os.environ['MODULE_ID']
+          wiki_url = 'https://wiki.3deathsaves.com/' + os.environ['MODULE_ID']
+          separator = {'type': 14, 'divider': True, 'spacing': 1}
+
+          payload = {
+              'flags': 1 << 15,
+              'components': [
+                  {'type': 10, 'content': ' '.join('<@&' + r + '>' for r in roles)},
+                  {'type': 17, 'accent_color': int(os.environ['ACCENT_COLOR'], 16), 'components': [
+                      {'type': 12, 'items': [{'media': {'url': 'attachment://banner.png'}}]},
+                      {'type': 10, 'content': '# ' + title},
+                      separator,
+                      {'type': 10, 'content': body},
+                      separator,
+                      {'type': 1, 'components': [
+                          {'type': 2, 'style': 5, 'label': 'Package Page', 'url': package_url},
+                          {'type': 2, 'style': 5, 'label': 'Wiki', 'url': wiki_url},
+                          {'type': 2, 'style': 5, 'label': 'Support on Patreon', 'url': 'https://www.patreon.com/3deathsaves'}
+                      ]}
+                  ]}
+              ],
+              'allowed_mentions': {'parse': [], 'roles': roles},
+              'attachments': [{'id': 0, 'filename': 'banner.png'}]
+          }
+
+          print(json.dumps(payload, indent=2))
+          with open('/tmp/discord_payload.json', 'w', encoding='utf-8') as f:
+              json.dump(payload, f)
+          PY
+
+          curl -sS --fail-with-body \
+              -F "payload_json=</tmp/discord_payload.json;type=application/json" \
+              -F "files[0]=@banner.png;type=image/png" \
+              "$DISCORD_WEBHOOK?wait=true&with_components=true"
