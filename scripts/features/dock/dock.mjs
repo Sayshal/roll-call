@@ -25,8 +25,9 @@ import {
   toggleHidden,
   viewedCombat
 } from '../../utils/_module.mjs';
-import { applyPlacement, dragDock, isCrowded } from './placement.mjs';
+import { applyPlacement, dragDock, isCrowded, orient, roomAlong } from './placement.mjs';
 import { bladeView } from './views/blade.mjs';
+import { RollCallSettings } from '../settings-panel.mjs';
 import { VsScreen } from '../vs-screen.mjs';
 import { codexView } from './views/codex.mjs';
 
@@ -62,6 +63,12 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /** @type {Set<string>} Token ids targeted for the active combatant in the current render. */
   #targets = new Set();
+
+  /** @type {number} Cards the faded dock is scrolled past its default window, by the mouse wheel. */
+  #fadeShift = 0;
+
+  /** @type {string|null} Round and turn the fade scroll belongs to; a new turn scrolls back. */
+  #fadeTurn = null;
 
   /** @type {Map<string, string|null>} Group names worked out in the current render, keyed by group key. */
   #groupLabels = new Map();
@@ -130,7 +137,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
   static #SHOW_VS = { action: 'showVs', icon: 'fa-swords', label: 'ROLLCALL.Vs.Show' };
 
   /** @type {object} GM settings shortcut button. */
-  static #SETTINGS = { action: 'settings', icon: 'fa-gear', label: 'ATLAS.Common.Settings' };
+  static #SETTINGS = { action: 'settings', icon: 'fa-gear', label: 'ROLLCALL.Settings.Panel.Title' };
 
   /** @type {string[]} Combat changes that can move, add or remove cards; any other change re-renders only the strip. */
   static #LAYOUT_KEYS = ['round', 'turn', 'combatants', 'active', 'scene'];
@@ -144,6 +151,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
   /** @type {string[]} Settings whose change re-evaluates the dock. */
   static #SETTING_KEYS = [
     MODULE.SETTINGS.CARD_ELEMENTS,
+    MODULE.SETTINGS.DOCK_ART,
     MODULE.SETTINGS.DOCK_ENABLED,
     MODULE.SETTINGS.DOCK_FORCED_EDGE,
     MODULE.SETTINGS.DOCK_HIDDEN,
@@ -189,8 +197,10 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     window.addEventListener('resize', reposition);
     Hooks.on('collapseSidebar', () => dock.rendered && dock.#followSidebar());
     for (const hook of ['renderHotbar', 'renderPlayers', 'renderSceneControls', 'renderSceneNavigation']) Hooks.on(hook, reposition);
-    Hooks.on('renderSettingsConfig', (_app, html) => dock.#bindScalePreview(html));
-    Hooks.on('closeSettingsConfig', () => dock.rendered && dock.#reposition());
+    for (const app of ['SettingsConfig', RollCallSettings.name]) {
+      Hooks.on(`render${app}`, (_app, html) => dock.#bindScalePreview(html));
+      Hooks.on(`close${app}`, () => dock.rendered && dock.#reposition());
+    }
     Hooks.on('3ds-atlas.themeChanged', ({ moduleId } = {}) => moduleId === MODULE.ID && dock.rendered && dock.render());
   }
 
@@ -233,13 +243,63 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     const scale = game.settings.get(MODULE.ID, MODULE.SETTINGS.DOCK_SCALE);
     const mode = tuck && game.settings.get(MODULE.ID, MODULE.SETTINGS.DOCK_TUCK);
     const { classList } = this.element;
+    orient(this.element, placement);
     if (mode === 'crowded') {
       classList.add('rc-measuring');
       classList.remove('rc-tucked');
       classList.toggle('rc-tucked', isCrowded(this.element, placement, scale));
     } else if (mode) classList.toggle('rc-tucked', mode === 'always');
+    if (mode) this.#fade(placement, scale);
     applyPlacement(this.element, placement, scale);
     classList.remove('rc-measuring');
+  }
+
+  /**
+   * Show only the run of cards that fits along the dock's edge, starting just before the active card when there is room, and fade the cut ends.
+   * A faded dock takes its edge's full length, so the controls hold still as it scrolls.
+   * @param {object} placement Stored placement.
+   * @param {number} scale Scale chosen by the user.
+   */
+  #fade(placement, scale) {
+    const items = [...this.element.querySelectorAll('.rc-card, .rc-event, .rc-divider')];
+    for (const item of items) item.classList.remove('rc-faded', 'rc-fade-start', 'rc-fade-end');
+    Object.assign(this.element.style, { minHeight: '', minWidth: '' });
+    if (!items.length) return;
+    this.element.classList.add('rc-measuring');
+    const vertical = this.element.dataset.orientation === 'vertical';
+    const start = (item) => (vertical ? item.offsetTop : item.offsetLeft);
+    const end = (item) => start(item) + (vertical ? item.offsetHeight : item.offsetWidth);
+    items.sort((a, b) => start(a) - start(b));
+    const span = (from, to) => end(items[to]) - start(items[from]);
+    const length = roomAlong(this.element, placement, scale);
+    const room = length - ((vertical ? this.element.offsetHeight : this.element.offsetWidth) - span(0, items.length - 1));
+    if (span(0, items.length - 1) <= room) return;
+    const active = Math.max(
+      0,
+      items.findIndex((item) => item.classList.contains('is-active'))
+    );
+    const anchor = active > 0 && span(active - 1, Math.min(active + 1, items.length - 1)) <= room ? active - 1 : active;
+    let last = items.length - 1;
+    while (last > 0 && span(last - 1, items.length - 1) <= room) last--;
+    const from = Math.clamp(anchor + this.#fadeShift, 0, last);
+    this.#fadeShift = from - anchor;
+    let to = from;
+    while (to + 1 < items.length && span(from, to + 1) <= room) to++;
+    items.forEach((item, index) => item.classList.toggle('rc-faded', index < from || index > to));
+    items[from].classList.toggle('rc-fade-start', from > 0 && from !== active);
+    items[to].classList.toggle('rc-fade-end', to < items.length - 1 && to !== active);
+    this.element.style[vertical ? 'minHeight' : 'minWidth'] = `${length}px`;
+  }
+
+  /**
+   * Scroll a faded dock by one card per wheel step.
+   * @param {WheelEvent} event The wheel event.
+   */
+  #onWheel(event) {
+    if (!this.element.querySelector('.rc-faded')) return;
+    event.preventDefault();
+    this.#fadeShift += Math.sign(event.deltaY || event.deltaX);
+    this.#reposition();
   }
 
   /**
@@ -266,7 +326,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
    * @param {HTMLElement} html The settings window element.
    */
   #bindScalePreview(html) {
-    const picker = html.querySelector(`[name="${MODULE.ID}.${MODULE.SETTINGS.DOCK_SCALE}"]`);
+    const picker = html.querySelector(`[name="${MODULE.ID}.${MODULE.SETTINGS.DOCK_SCALE}"], [name="${MODULE.SETTINGS.DOCK_SCALE}"]`);
     picker?.addEventListener('input', () => this.rendered && applyPlacement(this.element, this.#placement(), picker.valueAsNumber));
   }
 
@@ -387,6 +447,10 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     context.canMove = game.user.isGM || !game.settings.get(MODULE.ID, MODULE.SETTINGS.DOCK_FORCED_EDGE);
     context.started = combat.started;
     context.round = combat.round;
+    if (this.#fadeTurn !== `${combat.round}.${turn}`) {
+      this.#fadeTurn = `${combat.round}.${turn}`;
+      this.#fadeShift = 0;
+    }
     context.sides = sideCounts(combat);
     this.#targets = this.#activeTargets(combat);
     context.clock = combat.started && combatClock(combat) ? { total: context.isGM, turn: game.settings.get(MODULE.ID, MODULE.SETTINGS.TURN_DURATION) > 0 } : null;
@@ -481,7 +545,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     return {
       id: combatant.id,
       name: displayName(game.user, combatant),
-      img: combatant.img,
+      img: RollCallDock.#art(combatant),
       obscured: !canSee(game.user, combatant, 'name'),
       order,
       depth: 100 - Math.abs(order - (fixed && combat.started ? turn : 0)),
@@ -517,6 +581,15 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     if (!key) return null;
     if (!this.#groupLabels.has(key)) this.#groupLabels.set(key, adapter.groupLabel(combatant));
     return this.#groupLabels.get(key);
+  }
+
+  /**
+   * Card art for a combatant: its token image, or its actor portrait when this device prefers portraits. A combatant's own image always wins.
+   * @param {Combatant} combatant The combatant.
+   * @returns {string} Image path.
+   */
+  static #art(combatant) {
+    return combatant._source.img || (game.settings.get(MODULE.ID, MODULE.SETTINGS.DOCK_ART) === 'portrait' && combatant.actor?.img) || combatant.img;
   }
 
   /**
@@ -567,7 +640,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     const folded = (list) => (list.length ? { count: list.length, names: list.map((member) => displayName(game.user, member)).join(', ') } : null);
     const minis = listed.slice(start, end).map((member) => ({
       id: member.id,
-      img: member.img,
+      img: RollCallDock.#art(member),
       obscured: !canSee(game.user, member, 'name'),
       name: displayName(game.user, member),
       ...this.#turnState(combat, member),
@@ -774,6 +847,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
   _onFirstRender(context, options) {
     super._onFirstRender(context, options);
     this.#ticker = setInterval(() => this.#tick(), 1000);
+    this.element.addEventListener('wheel', (event) => this.#onWheel(event), { passive: false });
   }
 
   /** @inheritdoc */
@@ -923,10 +997,10 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   /**
-   * Open the settings window on Roll Call's category.
+   * Open Roll Call's settings panel.
    * @this {RollCallDock}
    */
   static #onSettings() {
-    new foundry.applications.settings.SettingsConfig({ initialCategory: MODULE.ID }).render({ force: true });
+    new RollCallSettings().render({ force: true });
   }
 }

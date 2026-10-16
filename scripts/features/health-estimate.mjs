@@ -13,6 +13,7 @@ export class HealthEstimate {
     MODULE.SETTINGS.HEALTH_BUCKETS,
     MODULE.SETTINGS.HEALTH_CANVAS,
     MODULE.SETTINGS.HEALTH_ESTIMATE_ENABLED,
+    MODULE.SETTINGS.HEALTH_SCALE,
     MODULE.SETTINGS.NAME_MASK,
     MODULE.SETTINGS.PRIVACY_RULES,
     'core.combatTrackerConfig'
@@ -47,13 +48,15 @@ export class HealthEstimate {
       return;
     }
     if (!label || label.destroyed) {
-      label = token.addChild(new PreciseText('', PreciseText.getTextStyle({ fontSize: 18 })));
+      label = token.addChild(new PreciseText('', PreciseText.getTextStyle()));
       label.anchor.set(0.5, 0);
       HealthEstimate.#labels.set(token, label);
     }
     label.text = estimate.label;
     label.style.fill = estimate.color ?? CONFIG.canvasTextStyle.fill;
     label.visible = mode === 'always' || token.hover;
+    label.style.fontSize = 24 * game.settings.get(MODULE.ID, MODULE.SETTINGS.HEALTH_SCALE);
+    label.scale.set(canvas.dimensions.uiScale * token.document.width);
     label.position.set(token.nameplate.x, token.nameplate.y + token.nameplate.height);
   }
 }

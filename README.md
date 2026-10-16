@@ -30,11 +30,11 @@ Roll Call puts initiative front and center with a customizable combat dock, clea
 
 ![Stacked card and round event](https://wiki.3deathsaves.com/roll-call/stacks-events.png)
 
-**Make turns hard to miss.** Turn banners, screen glows, token camera jumps, and an On Deck marker help everyone keep track of who's up, who's next, and whether they should probably stop checking their inventory.
+**Make turns hard to miss.** Turn banners, screen glows, token camera jumps, and an Up Next marker help everyone keep track of who's up, who's next, and whether they should probably stop checking their inventory.
 
 ![Turn banner](https://wiki.3deathsaves.com/roll-call/turn-banner.png)
 
-![Turn and On Deck markers](https://wiki.3deathsaves.com/roll-call/turn-markers.png)
+![Turn and Up Next markers](https://wiki.3deathsaves.com/roll-call/turn-markers.png)
 
 **Keep secrets secret.** Decide what players can see for each token disposition. Mask names, fade portraits, and show health as labels like Bloodied instead of giving away exact numbers.
 

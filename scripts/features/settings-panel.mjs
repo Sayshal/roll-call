@@ -22,6 +22,7 @@ export class RollCallSettings extends ApplicationV2 {
           toggle: MODULE.SETTINGS.DOCK_ENABLED,
           keys: [
             MODULE.SETTINGS.DOCK_VIEW,
+            MODULE.SETTINGS.DOCK_ART,
             MODULE.SETTINGS.DOCK_MINIMAL,
             MODULE.SETTINGS.DOCK_TUCK,
             MODULE.SETTINGS.DOCK_SCALE,
@@ -40,7 +41,7 @@ export class RollCallSettings extends ApplicationV2 {
       sections: [
         {
           toggle: MODULE.SETTINGS.REMINDERS_ENABLED,
-          keys: [MODULE.SETTINGS.REMINDER_BANNER, MODULE.SETTINGS.REMINDER_GLOW, MODULE.SETTINGS.REMINDER_PAN, MODULE.SETTINGS.SELECT_ACTIVE_TOKEN, MODULE.SETTINGS.ON_DECK_MARKER]
+          keys: [MODULE.SETTINGS.REMINDER_BANNER, MODULE.SETTINGS.REMINDER_GLOW, MODULE.SETTINGS.REMINDER_PAN, MODULE.SETTINGS.SELECT_ACTIVE_TOKEN]
         },
         { keys: [MODULE.SETTINGS.NUDGE_ENABLED, MODULE.SETTINGS.TURN_DURATION, MODULE.SETTINGS.TURN_EXPIRY] }
       ]
@@ -50,7 +51,7 @@ export class RollCallSettings extends ApplicationV2 {
       icon: 'user-secret',
       sections: [
         { toggle: MODULE.SETTINGS.PRIVACY_ENABLED, keys: [MODULE.SETTINGS.NAME_MASK, MODULE.SETTINGS.HIDE_UNTIL_SEEN, MODULE.SETTINGS.PRIVACY_RULES] },
-        { toggle: MODULE.SETTINGS.HEALTH_ESTIMATE_ENABLED, keys: [MODULE.SETTINGS.HEALTH_CANVAS, MODULE.SETTINGS.HEALTH_BUCKETS] }
+        { toggle: MODULE.SETTINGS.HEALTH_ESTIMATE_ENABLED, keys: [MODULE.SETTINGS.HEALTH_BUCKETS] }
       ]
     },
     {
@@ -63,9 +64,24 @@ export class RollCallSettings extends ApplicationV2 {
     {
       id: 'encounter',
       icon: 'dungeon',
+      sections: [{ toggle: MODULE.SETTINGS.ROUND_EVENTS_ENABLED, keys: [MODULE.SETTINGS.LAIR_PROMPT] }, { keys: [MODULE.SETTINGS.VS_SCREEN, MODULE.SETTINGS.LINK_SCENE, MODULE.SETTINGS.AUTO_DEFEAT] }]
+    },
+    {
+      id: 'canvas',
+      icon: 'map',
       sections: [
-        { toggle: MODULE.SETTINGS.ROUND_EVENTS_ENABLED, keys: [MODULE.SETTINGS.LAIR_PROMPT] },
-        { keys: [MODULE.SETTINGS.VS_SCREEN, MODULE.SETTINGS.LINK_SCENE, MODULE.SETTINGS.TARGET_ICONS, MODULE.SETTINGS.SUMMON_LINES, MODULE.SETTINGS.AUTO_DEFEAT] }
+        {
+          keys: [
+            MODULE.SETTINGS.ON_DECK_MARKER,
+            MODULE.SETTINGS.ON_DECK_LABEL,
+            MODULE.SETTINGS.ON_DECK_FONT_COLOR,
+            MODULE.SETTINGS.ON_DECK_BACKGROUND_COLOR,
+            MODULE.SETTINGS.ON_DECK_OUTLINE_COLOR,
+            MODULE.SETTINGS.ON_DECK_IMAGE
+          ]
+        },
+        { keys: [MODULE.SETTINGS.HEALTH_CANVAS, MODULE.SETTINGS.HEALTH_SCALE] },
+        { keys: [MODULE.SETTINGS.TARGET_ICONS, MODULE.SETTINGS.SUMMON_LINES] }
       ]
     },
     {
@@ -204,13 +220,22 @@ export class RollCallSettings extends ApplicationV2 {
   }
 
   /**
+   * A setting's stored value in source form, with colours as CSS strings rather than `Color` objects.
+   * @param {string} key Setting key.
+   * @returns {*} Value.
+   */
+  static #stored(key) {
+    return RollCallSettings.#setting(key).type.clean(game.settings.get(MODULE.ID, key));
+  }
+
+  /**
    * Form markup for one setting.
    * @param {string} key Setting key.
    * @returns {HTMLElement} Form group or fieldset.
    */
   #group(key) {
     const setting = RollCallSettings.#setting(key);
-    const value = this.#draft?.[key] ?? game.settings.get(MODULE.ID, key);
+    const value = this.#draft?.[key] ?? RollCallSettings.#stored(key);
     if (setting.type instanceof SchemaField) {
       const fieldset = settingFormGroup(setting.type, key, value, this.id);
       const legend = Object.assign(document.createElement('legend'), { textContent: _loc(setting.name) });
@@ -228,7 +253,7 @@ export class RollCallSettings extends ApplicationV2 {
     const data = foundry.utils.expandObject(new foundry.applications.ux.FormDataExtended(this.element).object);
     for (const [key, value] of Object.entries(data)) {
       const { type } = RollCallSettings.#setting(key);
-      if (type instanceof SchemaField) data[key] = keepKeys(settingValue(type, value), this.#draft?.[key] ?? game.settings.get(MODULE.ID, key));
+      if (type instanceof SchemaField) data[key] = keepKeys(settingValue(type, value), this.#draft?.[key] ?? RollCallSettings.#stored(key));
     }
     return data;
   }
@@ -281,7 +306,7 @@ export class RollCallSettings extends ApplicationV2 {
   static async #onSubmit() {
     const changed = Object.entries(this.#readForm())
       .map(([key, value]) => ({ key, setting: RollCallSettings.#setting(key), value: RollCallSettings.#setting(key).type.clean(value) }))
-      .filter(({ key, value }) => !foundry.utils.objectsEqual({ value: game.settings.get(MODULE.ID, key) }, { value }));
+      .filter(({ key, value }) => JSON.stringify(RollCallSettings.#stored(key)) !== JSON.stringify(value));
     await Promise.all(changed.map(({ key, value }) => game.settings.set(MODULE.ID, key, value)));
     this.#draft = null;
     const reload = changed.filter(({ setting }) => setting.requiresReload);

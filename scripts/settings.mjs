@@ -1,7 +1,7 @@
 import { MODULE } from './constants.mjs';
 import { RollCallSettings } from './features/_module.mjs';
 
-const { ArrayField, BooleanField, ColorField, NumberField, SchemaField, StringField } = foundry.data.fields;
+const { ArrayField, BooleanField, ColorField, FilePathField, NumberField, SchemaField, StringField } = foundry.data.fields;
 
 /**
  * Display mode field for one dock card element.
@@ -85,6 +85,13 @@ export function registerSettings() {
     config: true,
     type: new StringField({ initial: 'blade', required: true, blank: false, choices: { blade: 'ROLLCALL.View.Blade', codex: 'ROLLCALL.View.Codex' } })
   });
+  r(MODULE.ID, MODULE.SETTINGS.DOCK_ART, {
+    name: 'ROLLCALL.Settings.DockArt.Name',
+    hint: 'ROLLCALL.Settings.DockArt.Hint',
+    scope: 'client',
+    config: true,
+    type: new StringField({ initial: 'token', required: true, blank: false, choices: { token: 'ROLLCALL.Settings.DockArt.Token', portrait: 'ROLLCALL.Settings.DockArt.Portrait' } })
+  });
   r(MODULE.ID, MODULE.SETTINGS.DOCK_MINIMAL, {
     name: 'ROLLCALL.Settings.DockMinimal.Name',
     hint: 'ROLLCALL.Settings.DockMinimal.Hint',
@@ -122,7 +129,7 @@ export function registerSettings() {
     scope: 'client',
     config: true,
     type: new StringField({
-      initial: 'crowded',
+      initial: 'off',
       required: true,
       blank: false,
       choices: { off: 'ROLLCALL.Settings.DockTuck.Off', crowded: 'ROLLCALL.Settings.DockTuck.Crowded', always: 'ROLLCALL.Settings.DockTuck.Always' }
@@ -236,6 +243,13 @@ export function registerSettings() {
     scope: 'world',
     type: displayModeField(undefined, 'hover')
   });
+  r(MODULE.ID, MODULE.SETTINGS.HEALTH_SCALE, {
+    name: 'ROLLCALL.Settings.HealthScale.Name',
+    hint: 'ROLLCALL.Settings.HealthScale.Hint',
+    scope: 'user',
+    config: true,
+    type: new NumberField({ initial: 1, min: 0.5, max: 3, step: 0.05 })
+  });
 
   r(MODULE.ID, MODULE.SETTINGS.REMINDERS_ENABLED, {
     name: 'ROLLCALL.Settings.RemindersEnabled.Name',
@@ -276,7 +290,42 @@ export function registerSettings() {
     name: 'ROLLCALL.Settings.OnDeckMarker.Name',
     hint: 'ROLLCALL.Settings.OnDeckMarker.Hint',
     scope: 'world',
-    type: new BooleanField({ initial: true })
+    type: new StringField({
+      initial: 'arc',
+      required: true,
+      blank: false,
+      choices: { off: 'ATLAS.Common.Off', arc: 'ROLLCALL.Settings.OnDeckMarker.Arc', ring: 'ROLLCALL.Settings.OnDeckMarker.Ring' }
+    })
+  });
+  r(MODULE.ID, MODULE.SETTINGS.ON_DECK_LABEL, {
+    name: 'ROLLCALL.Settings.OnDeckLabel.Name',
+    hint: 'ROLLCALL.Settings.OnDeckLabel.Hint',
+    scope: 'world',
+    type: new StringField({ initial: 'blade', required: true, blank: false, choices: { off: 'ATLAS.Common.Off', blade: 'ROLLCALL.View.Blade', codex: 'ROLLCALL.View.Codex' } })
+  });
+  r(MODULE.ID, MODULE.SETTINGS.ON_DECK_FONT_COLOR, {
+    name: 'ROLLCALL.Settings.OnDeckFontColor.Name',
+    hint: 'ROLLCALL.Settings.OnDeckFontColor.Hint',
+    scope: 'world',
+    type: new ColorField({ nullable: true, initial: null })
+  });
+  r(MODULE.ID, MODULE.SETTINGS.ON_DECK_BACKGROUND_COLOR, {
+    name: 'ROLLCALL.Settings.OnDeckBackgroundColor.Name',
+    hint: 'ROLLCALL.Settings.OnDeckBackgroundColor.Hint',
+    scope: 'world',
+    type: new ColorField({ nullable: true, initial: null })
+  });
+  r(MODULE.ID, MODULE.SETTINGS.ON_DECK_OUTLINE_COLOR, {
+    name: 'ROLLCALL.Settings.OnDeckOutlineColor.Name',
+    hint: 'ROLLCALL.Settings.OnDeckOutlineColor.Hint',
+    scope: 'world',
+    type: new ColorField({ nullable: true, initial: null })
+  });
+  r(MODULE.ID, MODULE.SETTINGS.ON_DECK_IMAGE, {
+    name: 'ROLLCALL.Settings.OnDeckImage.Name',
+    hint: 'ROLLCALL.Settings.OnDeckImage.Hint',
+    scope: 'world',
+    type: new FilePathField({ categories: ['IMAGE'], nullable: true, initial: null })
   });
 
   r(MODULE.ID, MODULE.SETTINGS.NUDGE_ENABLED, {

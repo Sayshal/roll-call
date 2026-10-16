@@ -66,6 +66,32 @@ function fitScale(edge, width, height, userScale) {
 }
 
 /**
+ * Flag the dock's edge and orientation for styles: side edges are vertical, top and bottom horizontal, a floating dock uses its own `vertical` flag.
+ * @param {HTMLElement} element Dock element.
+ * @param {{edge: string, vertical: boolean}} placement Stored placement.
+ */
+export function orient(element, placement) {
+  const { edge } = placement;
+  element.dataset.edge = edge;
+  element.dataset.orientation = edge === 'left' || edge === 'right' || (edge === 'float' && placement.vertical) ? 'vertical' : 'horizontal';
+}
+
+/**
+ * Unscaled length the dock may take along its edge at the user's scale.
+ * @param {HTMLElement} element Dock element.
+ * @param {{edge: string}} placement Stored placement.
+ * @param {number} userScale Scale chosen by the user.
+ * @returns {number} Length in unscaled pixels.
+ */
+export function roomAlong(element, placement, userScale) {
+  const { edge } = placement;
+  const vertical = element.dataset.orientation === 'vertical';
+  if (edge === 'float') return (vertical ? window.innerHeight : window.innerWidth) / userScale;
+  const area = freeArea(edge);
+  return ((vertical ? area.bottom - area.top : area.right - area.left) - 2 * EDGE_GAP) / userScale;
+}
+
+/**
  * Whether the dock as currently laid out would have to shrink below the user's scale to fit its placement.
  * @param {HTMLElement} element Dock element.
  * @param {{edge: string}} placement Stored placement.
@@ -86,8 +112,7 @@ export function isCrowded(element, placement, userScale) {
  */
 export function applyPlacement(element, placement, userScale) {
   const { edge } = placement;
-  element.dataset.edge = edge;
-  element.dataset.orientation = edge === 'left' || edge === 'right' || (edge === 'float' && placement.vertical) ? 'vertical' : 'horizontal';
+  orient(element, placement);
   const { offsetWidth: width, offsetHeight: height } = element;
   const scale = fitScale(edge, width, height, userScale);
   const { left, top } = resolve(placement, { width: width * scale, height: height * scale });
