@@ -1,7 +1,11 @@
 ## New Features
 
-- Combat dock shows the turn order as a frameless bar in Blade or Codex style, which you can snap to any screen edge or float.
-- Privacy rules per token disposition decide which names, health, initiative and effects players see in the dock and the core tracker.
-- Turn clocks count down each turn and can nudge the player or end the turn when time runs out.
-- Round events let you schedule reminders or extra turns on specific, repeating or rolled rounds.
-- VS screen plays a full-screen allies versus enemies intro in turn order when combat starts.
+- Docks too long for their edge hide the overflow, fade the cut ends and scroll with the mouse wheel instead of shrinking.
+- Health labels on tokens scale with the grid and token size, with a per-user size setting.
+- Card Art setting shows actor portraits instead of token images on dock cards.
+- Up Next label shows a Blade or Codex badge with theme colors or a custom image.
+- The On Deck marker is now Up Next and can be an arc, a ring or off.
+
+## Bug Fixes
+
+- 2 bugs squashed
