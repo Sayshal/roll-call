@@ -1,3 +1,40 @@
 ## New Features
 
-- Initial release.
+- Auto-defeat marks combatants defeated at zero health on systems that don't do it themselves
+- Bulk Add adds every token of one disposition, or every token that isn't hidden, to combat from the token controls
+- Card element settings show each card's name, health, initiative and effects never, on hover or always
+- Dock cards have roll initiative, End Turn, ping and pan buttons; click a card to select and pan to its token, double-click to open the actor sheet
+- Dock scale is set per user and follows them to every device
+- Drag the dock's grip to snap it to a screen edge or let it float, and double-click the grip to rotate a floating dock
+- Focus Mode hides GM-chosen interface parts and CSS selectors from players during combat on their scene, offers to close their open sheets, and each player can turn it off for their device
+- Health estimates show health as labels from editable buckets, on dock cards and optionally under tokens
+- Hide Until Seen keeps new unowned combatants hidden until a player's token sees them
+- Initiative tools auto-roll for unowned combatants as they join, freeze the dock order until combat starts, reverse turn order, and share initiative across a group on systems that don't do it themselves
+- Legendary actions show as pips on D&D 5e cards; click to spend one, right-click to restore one
+- Link Combat to Scene links an unlinked combat to the GM's current scene when it starts
+- Masked names show as a generic label, the token name or the actor name, and the dock fades the portrait out
+- Minimal Cards shrinks waiting cards until hovered, and Tuck slides inactive cards under their neighbors, always or only when the dock is crowded
+- Nudge plays the turn sound again, shows a banner and whispers the active combatant's players, from the dock or the tracker's combatant menu
+- On D&D 5e, adding a legacy-rules creature with lair actions offers it a hidden lair turn every round
+- Option to hide the sidebar combat tab for everyone
+- Other systems can register an adapter with ROLLCALL.api.registerAdapter inside the rollCall.registerAdapters hook
+- Privacy rules per token disposition decide whether players see each combatant's name, health (exact, estimate or hidden), initiative and effects, in the dock and the core tracker
+- Round event schedules take single rounds, ranges, open-ended and repeating rounds, or a dice formula rerolled after each occurrence, and each event can be visible to players or hidden
+- Round events are GM-scheduled reminders that post to chat with a banner, or extra turns that join the turn order as their own card
+- Stacked cards put consecutive members of a core group, or a D&D 5e combatant and its summons, on one card; Shift-click End Turn to end the turn for everyone left on it
+- Summon lines on D&D 5e connect summoners to their summons on the canvas, on hover or always
+- Target icons mark dock cards targeted by the active combatant's players, or by the GM on unowned turns
+- Ten extra turn marker animations for core's Turn Marker settings, including spin, heartbeat, breathe, ember, ripple, shimmer and prism
+- The combat clock (GM only) and the per-turn countdown show overtime and freeze while the game is paused
+- The combat dock shows the turn order as a row of Blade or Codex cards on the canvas, to the GM once the combat has combatants and to players once it starts
+- The GM can drag a dock card onto another to move that combatant ahead of it in initiative
+- The GM can stop players from hiding the dock and force every player's dock onto one edge
+- The GM's card menu adds defeated and hide toggles to the tracker's combatant options
+- The round panel has the GM's turn and round buttons, initiative rolls, start and end, round events, VS screen replay and settings
+- The tabbed settings panel puts every option in one window, with an on/off toggle per feature and system-specific options shown only where they apply
+- The turn clock can nudge the player or end the turn when it runs out
+- The VS screen lines up allies against enemies in turn order when combat starts, and the GM can replay it for everyone
+- Turn markers of hidden combatants are hidden from players
+- Turn reminders show a banner and screen edge glow when your turn starts or is next, can pan to and select your token, and put an On Deck marker on the next token
+- Unbound keybindings for Next Turn and Previous Turn (GM) and End Your Turn (owner of the active combatant)
+- Upcoming reminders show on the dock, and the GM sees every upcoming round event as a removable row in the combat tracker

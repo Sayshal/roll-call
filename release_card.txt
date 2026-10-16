@@ -1,3 +1,7 @@
 ## New Features
 
-- Initial release.
+- Combat dock shows the turn order as a frameless bar in Blade or Codex style, which you can snap to any screen edge or float.
+- Privacy rules per token disposition decide which names, health, initiative and effects players see in the dock and the core tracker.
+- Turn clocks count down each turn and can nudge the player or end the turn when time runs out.
+- Round events let you schedule reminders or extra turns on specific, repeating or rolled rounds.
+- VS screen plays a full-screen allies versus enemies intro in turn order when combat starts.
