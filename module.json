@@ -11,27 +11,29 @@
   "changelog": "https://github.com/Sayshal/roll-call/releases",
   "compatibility": {
     "minimum": "14",
-    "verified": "14.367"
+    "verified": "14"
   },
-  "description": "",
+  "description": "A combat tracker dock on the play surface, with privacy rules, health estimates, turn reminders and a turn timer.",
   "download": "",
   "esmodules": ["roll-call.mjs"],
   "flags": {
     "hotReload": {
       "extensions": ["css", "html", "hbs", "json"],
-      "paths": ["styles", "templates", "lang"]
+      "paths": ["styles", "templates"]
     }
   },
   "id": "roll-call",
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    }
-  ],
+  "license": "https://github.com/Sayshal/roll-call?tab=MIT-1-ov-file",
   "manifest": "https://github.com/Sayshal/roll-call/releases/latest/download/module.json",
   "readme": "https://github.com/Sayshal/roll-call?tab=readme-ov-file",
+  "relationships": {
+    "requires": [
+      {
+        "id": "3ds-atlas",
+        "type": "module"
+      }
+    ]
+  },
   "styles": ["styles/roll-call.css"],
   "title": "Roll Call",
   "url": "https://github.com/Sayshal/roll-call",

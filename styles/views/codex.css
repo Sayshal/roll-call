@@ -1,0 +1,611 @@
+.rc-view-codex {
+  gap: 0.625rem;
+
+  .rc-codex {
+    --roll-call-codex-h: 9rem;
+    --roll-call-codex-w: 6rem;
+    --roll-call-tuck-x: calc(var(--roll-call-codex-w) * -0.7);
+    --roll-call-tuck-y: calc(var(--roll-call-codex-h) * -0.7);
+
+    isolation: isolate;
+    display: flex;
+    position: relative;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0.625rem;
+    transition: opacity var(--roll-call-dur) var(--roll-call-ease-out);
+
+    &.is-ondeck {
+      --roll-call-codex-h: 9.75rem;
+      --roll-call-codex-w: 6.5rem;
+
+      margin-top: 1rem;
+    }
+
+    &.is-acted {
+      opacity: 0.72;
+    }
+  }
+
+  .rc-stack {
+    top: 50%;
+    right: 0.25rem;
+    left: 0.25rem;
+    justify-content: center;
+  }
+
+  .rc-codex-frame {
+    isolation: isolate;
+    position: relative;
+    box-sizing: border-box;
+    width: var(--roll-call-codex-w);
+    height: var(--roll-call-codex-h);
+    padding: 0.125rem;
+    border-radius: calc(var(--roll-call-codex-w) / 2) calc(var(--roll-call-codex-w) / 2) 0.375rem 0.375rem;
+    background: linear-gradient(160deg, var(--roll-call-border-hi), var(--roll-call-border));
+    box-shadow:
+      0 0.125rem 0.375rem var(--roll-call-shadow),
+      0 0 0 0.0625rem rgb(0 0 0 / 35%);
+    transition:
+      width var(--roll-call-dur) var(--roll-call-ease-out),
+      height var(--roll-call-dur) var(--roll-call-ease-out),
+      translate var(--roll-call-dur-fast) var(--roll-call-ease-out);
+  }
+
+  .rc-codex:hover .rc-codex-frame {
+    translate: 0 -0.125rem;
+  }
+
+  .rc-codex-face {
+    gap: 0.1875rem;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 0.375rem;
+    border-radius: calc(var(--roll-call-codex-w) / 2 - 0.125rem) calc(var(--roll-call-codex-w) / 2 - 0.125rem) 0.25rem 0.25rem;
+    cursor: pointer;
+    background: linear-gradient(180deg, var(--roll-call-bg-elev), var(--roll-call-bg));
+    box-shadow:
+      inset 0 0 0 0.1875rem var(--roll-call-bg-elev),
+      inset 0 0 0 0.25rem var(--roll-call-border);
+  }
+
+  .rc-codex-gem {
+    translate: -50% 0;
+    z-index: 2;
+    position: absolute;
+    top: 0.1875rem;
+    left: 50%;
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: 50%;
+    background: var(--roll-call-disposition);
+    box-shadow: 0 0 0 0.0625rem var(--roll-call-bg);
+  }
+
+  .rc-codex-window {
+    position: relative;
+    flex: 1;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 0;
+    border: 0.125rem solid var(--roll-call-bg);
+    border-radius: calc(var(--roll-call-codex-w) / 2) calc(var(--roll-call-codex-w) / 2) 0.125rem 0.125rem;
+    overflow: hidden;
+    background: var(--roll-call-bg) center top / cover no-repeat;
+  }
+
+  .rc-codex-ghost {
+    translate: -50% -50%;
+    opacity: 0.8;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: var(--roll-call-fg);
+    font-size: 1.25rem;
+  }
+
+  .rc-codex-strike {
+    position: absolute;
+    top: 50%;
+    left: -20%;
+    width: 140%;
+    height: 0.1875rem;
+    background: var(--roll-call-danger);
+    box-shadow: 0 0 0.5rem var(--roll-call-danger);
+    transform: rotate(-48deg);
+  }
+
+  .rc-effects {
+    gap: 0.125rem;
+    display: flex;
+    position: absolute;
+    bottom: 0.25rem;
+    left: 0.25rem;
+    flex-wrap: wrap;
+    width: 70%;
+
+    img {
+      width: 0.875rem;
+      height: 0.875rem;
+      border: none;
+    }
+  }
+
+  .rc-plate {
+    width: 100%;
+    text-align: center;
+  }
+
+  .rc-name {
+    overflow: hidden;
+    color: var(--roll-call-fg-bright);
+    font-weight: 700;
+    font-size: 0.75rem;
+    line-height: 0.875rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .rc-hp {
+    position: relative;
+    flex: none;
+    width: 100%;
+    height: 0.3125rem;
+    border-radius: 0.1875rem;
+    overflow: hidden;
+    background: var(--roll-call-hp-track);
+  }
+
+  .rc-hp-estimate {
+    height: auto;
+    overflow: visible;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 0.6875rem;
+    line-height: 0.8125rem;
+    text-align: center;
+    background: none;
+  }
+
+  .rc-init {
+    place-items: center;
+    display: grid;
+    z-index: 3;
+    position: absolute;
+    top: 0.25rem;
+    left: -0.375rem;
+    box-sizing: border-box;
+    width: 1.625rem;
+    height: 1.625rem;
+    padding-top: 0.125rem;
+    border-radius: 50% 46% 52% 48% / 48% 52% 47% 51%;
+    color: var(--roll-call-ink);
+    font: 400 1rem/1 var(--roll-call-font-display);
+    background: var(--roll-call-cta);
+    box-shadow:
+      0 0.0625rem 0.125rem var(--roll-call-shadow),
+      inset 0 0 0 0.125rem rgb(0 0 0 / 25%);
+    transform: rotate(-6deg);
+
+    &.is-unrolled {
+      color: var(--roll-call-fg-2);
+      background: var(--roll-call-bg-elev);
+    }
+  }
+
+  .rc-codex-tab {
+    translate: -50% 0;
+    z-index: -1;
+    position: absolute;
+    top: -0.875rem;
+    left: 50%;
+    height: 1rem;
+    padding: 0 0.5rem;
+    border: 0.0625rem solid rgb(from var(--roll-call-secondary) r g b / 70%);
+    border-bottom: none;
+    border-radius: 0.25rem 0.25rem 0 0;
+    color: var(--roll-call-secondary);
+    font-weight: 700;
+    font-size: 0.625rem;
+    line-height: 0.9375rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    background: var(--roll-call-bg);
+  }
+
+  /* Drawer: the active card always shows its actions, other cards on hover */
+  .rc-codex-drawer {
+    gap: 0.125rem;
+    display: flex;
+    z-index: -1;
+    position: relative;
+    justify-content: center;
+    min-width: calc(var(--roll-call-codex-w) - 0.75rem);
+    margin-top: -0.125rem;
+    padding: 0.3125rem 0.375rem 0.25rem;
+    border: 0.0625rem solid var(--roll-call-border);
+    border-top: none;
+    border-radius: 0 0 0.5625rem 0.5625rem;
+    background: var(--roll-call-seg-bg);
+    box-shadow: 0 0.25rem 0.625rem var(--roll-call-shadow);
+    transition: opacity var(--roll-call-dur-fast) var(--roll-call-ease-out);
+  }
+
+  .rc-codex:not(.is-active, :hover, :focus-within) .rc-codex-drawer {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .rc-seg {
+    place-items: center;
+    display: grid;
+    width: 1.625rem;
+    height: 1.625rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0.3125rem;
+    color: var(--roll-call-fg-2);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    background: transparent;
+    box-shadow: none;
+    transition:
+      background var(--roll-call-dur-fast),
+      color var(--roll-call-dur-fast);
+
+    &:hover {
+      color: var(--roll-call-accent);
+      background: var(--roll-call-accent-soft);
+    }
+
+    &:focus-visible {
+      outline: 0.125rem solid var(--roll-call-accent);
+      outline-offset: 0.0625rem;
+    }
+  }
+
+  .rc-seg-label {
+    display: none;
+  }
+
+  /* Active, on deck, defeated and hidden */
+  .rc-codex.is-active {
+    --roll-call-codex-h: 11.75rem;
+    --roll-call-codex-w: 7.75rem;
+
+    margin: 0 0.375rem;
+
+    .rc-codex-frame {
+      padding: 0.1875rem;
+      background: var(--roll-call-cta);
+      box-shadow:
+        0 0 0 0.0625rem var(--roll-call-accent),
+        0 0.375rem 1.125rem var(--roll-call-shadow),
+        0 0 1.5rem 0.125rem var(--roll-call-glow);
+    }
+
+    .rc-codex-face {
+      gap: 0.3125rem;
+      padding: 0.5rem;
+    }
+
+    .rc-plate {
+      clip-path: polygon(0 0, 100% 0, 95% 50%, 100% 100%, 0 100%, 5% 50%);
+      box-sizing: border-box;
+      width: calc(100% + 1.75rem);
+      margin: 0 -0.875rem;
+      padding: 0 0.75rem;
+      background: var(--roll-call-cta);
+    }
+
+    .rc-name {
+      color: var(--roll-call-ink);
+      font: 400 1rem/1.25rem var(--roll-call-font-display);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .rc-group {
+      color: color-mix(in oklab, var(--roll-call-ink) 80%, transparent);
+      font-weight: 700;
+    }
+
+    .rc-hp {
+      height: 0.375rem;
+    }
+
+    .rc-init {
+      top: 0.25rem;
+      left: -0.5rem;
+      width: 2.125rem;
+      height: 2.125rem;
+      font-size: 1.25rem;
+    }
+  }
+
+  .rc-codex.is-ondeck .rc-codex-frame {
+    background: linear-gradient(160deg, var(--roll-call-secondary), rgb(from var(--roll-call-secondary) r g b / 45%));
+  }
+
+  .rc-codex.is-defeated {
+    opacity: 0.8;
+
+    .rc-codex-window {
+      filter: grayscale(0.85) brightness(0.7);
+    }
+
+    .rc-name {
+      color: var(--roll-call-fg-2);
+      text-decoration: line-through 0.125rem var(--roll-call-danger);
+    }
+  }
+
+  .rc-codex.is-hidden {
+    .rc-codex-frame {
+      padding: 0.0625rem;
+      border: 0.0625rem dashed var(--roll-call-fg-2);
+      background: none;
+      box-shadow: none;
+    }
+
+    .rc-codex-face {
+      opacity: 0.55;
+    }
+  }
+
+  /* Colophon: round, clocks and GM controls */
+  .rc-codex-colophon {
+    gap: 0.375rem;
+    display: flex;
+    position: relative;
+    flex: none;
+    flex-direction: column;
+    order: -1;
+    box-sizing: border-box;
+    width: 9.25rem;
+    margin-top: 0.625rem;
+    padding: 0.5rem;
+    border: 0.0625rem solid var(--roll-call-border);
+    border-radius: 0.5rem;
+    background: linear-gradient(160deg, var(--roll-call-bg-elev), var(--roll-call-bg));
+    box-shadow:
+      inset 0 0 0 0.1875rem var(--roll-call-bg),
+      inset 0 0 0 0.25rem var(--roll-call-border),
+      0 0.125rem 0.375rem var(--roll-call-shadow);
+  }
+
+  .rc-codex-head {
+    gap: 0.375rem;
+    display: flex;
+    align-items: baseline;
+    padding: 0.125rem 0.25rem 0;
+  }
+
+  .rc-codex-label {
+    color: var(--roll-call-fg-2);
+    font-weight: 700;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  .rc-codex-numeral {
+    color: var(--roll-call-accent);
+    font: 400 1.75rem/1 var(--roll-call-font-display);
+  }
+
+  .rc-clock-turn {
+    margin-left: auto;
+    font: 400 1.125rem/1 var(--roll-call-font-display);
+  }
+
+  /* Grip: a slim tab along the round panel's outer edge, left when horizontal and on top when vertical */
+  .rc-grip {
+    place-items: center;
+    display: grid;
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: -0.8125rem;
+    width: 0.75rem;
+    border: 0.0625rem solid var(--roll-call-border);
+    border-right: none;
+    border-radius: 0.375rem 0 0 0.375rem;
+    color: var(--roll-call-fg-2);
+    font-size: 0.625rem;
+    cursor: grab;
+    background: var(--roll-call-seg-bg);
+
+    &:hover {
+      color: var(--roll-call-title);
+    }
+  }
+
+  .rc-codex-meta {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0.25rem;
+    color: var(--roll-call-fg-2);
+    font-weight: 600;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .rc-codex-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .rc-codex-rule {
+    height: 0.0625rem;
+    margin: 0 0.25rem;
+    background: var(--roll-call-border);
+  }
+
+  /* Bottom edge: cards rise from the bottom and drawers open upward */
+  &[data-edge='bottom'] {
+    .rc-codex {
+      flex-direction: column-reverse;
+      margin: 0 0 0.625rem;
+
+      &.is-ondeck {
+        margin-bottom: 0.625rem;
+      }
+
+      &.is-active {
+        margin: 0 0.375rem;
+      }
+    }
+
+    .rc-codex-drawer {
+      margin: 0 0 -0.125rem;
+      border-top: 0.0625rem solid var(--roll-call-border);
+      border-bottom: none;
+      border-radius: 0.5625rem 0.5625rem 0 0;
+    }
+
+    .rc-codex-colophon {
+      margin: 0 0 0.625rem;
+    }
+  }
+
+  /* Vertical edges: cards stack, drawers open toward the canvas */
+  &[data-orientation='vertical'] {
+    gap: 0.5rem;
+
+    .rc-codex {
+      flex-direction: row;
+      margin: 0;
+
+      &.is-ondeck {
+        margin-top: 0.875rem;
+      }
+    }
+
+    .rc-codex-drawer {
+      flex-direction: column;
+      min-width: 0;
+      margin: 0 0 0 -0.125rem;
+      padding: 0.375rem 0.25rem 0.375rem 0.3125rem;
+      border-top: 0.0625rem solid var(--roll-call-border);
+      border-left: none;
+      border-radius: 0 0.5625rem 0.5625rem 0;
+    }
+
+    .rc-codex-colophon {
+      margin: 0;
+    }
+
+    .rc-grip {
+      inset: -0.8125rem 0.5rem auto;
+      width: auto;
+      height: 0.75rem;
+      border: 0.0625rem solid var(--roll-call-border);
+      border-bottom: none;
+      border-radius: 0.375rem 0.375rem 0 0;
+
+      i {
+        rotate: 90deg;
+      }
+    }
+  }
+
+  &[data-edge='right'] {
+    .rc-codex {
+      flex-direction: row-reverse;
+    }
+
+    .rc-codex-drawer {
+      margin: 0 -0.125rem 0 0;
+      padding: 0.375rem 0.3125rem 0.375rem 0.25rem;
+      border-right: none;
+      border-left: 0.0625rem solid var(--roll-call-border);
+      border-radius: 0.5625rem 0 0 0.5625rem;
+    }
+  }
+}
+
+/* Minimal: waiting cards shrink to a round portrait medallion with the name on a ribbon below; seal, health, minis and buttons show on hover */
+.rc-view-codex.rc-minimal .rc-codex:not(.is-active) {
+  --roll-call-codex-h: 3.25rem;
+  --roll-call-codex-w: 3.25rem;
+
+  margin-bottom: 1.125rem;
+
+  .rc-codex-frame,
+  .rc-codex-face,
+  .rc-codex-window {
+    border-radius: 50%;
+  }
+
+  .rc-codex-face {
+    padding: 0;
+  }
+
+  .rc-codex-window {
+    border-width: 0.0625rem;
+  }
+
+  .rc-plate {
+    translate: -50% 0.25rem;
+    z-index: 3;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: max-content;
+    max-width: 5.5rem;
+    padding: 0 0.375rem;
+    border-radius: 0.25rem;
+    background: var(--roll-call-seg-bg);
+  }
+
+  .rc-hp {
+    position: absolute;
+    bottom: 0.25rem;
+    left: 20%;
+    width: 60%;
+  }
+
+  .rc-hp-estimate,
+  .rc-group,
+  .rc-legendary,
+  .rc-effects {
+    display: none;
+  }
+
+  &:not(:hover, :focus-within) :is(.rc-init, .rc-hp, .rc-stack) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .rc-init {
+    top: -0.25rem;
+    left: -0.5rem;
+  }
+
+  .rc-codex-drawer {
+    translate: -50% 0;
+    z-index: 4;
+    position: absolute;
+    top: calc(100% + 1.25rem);
+    left: 50%;
+    min-width: 0;
+    margin: 0;
+    border-top: 0.0625rem solid var(--roll-call-border);
+    border-radius: 0.5625rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-view-codex * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

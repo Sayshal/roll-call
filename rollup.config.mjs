@@ -34,7 +34,6 @@ export default {
       copyOnce: false,
       targets: [
         { src: 'templates', dest: 'dist' },
-        { src: 'lang', dest: 'dist' },
         { src: 'module.json', dest: 'dist' },
         { src: 'release_notes.txt', dest: 'dist' },
         { src: 'LICENSE', dest: 'dist' },

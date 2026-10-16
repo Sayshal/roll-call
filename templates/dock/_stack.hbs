@@ -1,0 +1,15 @@
+<div class="rc-stack {{upright}}">
+  {{#if stack.before}}
+    <div class="rc-stack-mini rc-stack-more is-acted" data-tooltip="{{stack.before.names}}">+{{stack.before.count}}
+    </div>
+  {{/if}}
+  {{#each stack.minis}}
+    <div
+      class="rc-stack-mini {{#if active}}is-active{{/if}} {{#if acted}}is-acted{{/if}} {{#if onDeck}}is-ondeck{{/if}} {{#if defeated}}is-defeated{{/if}} {{#if obscured}}is-obscured{{/if}}"
+      data-action="activate" data-combatant-id="{{id}}" data-tooltip="{{name}}"
+      style="background-image: url('{{img}}')"></div>
+  {{/each}}
+  {{#if stack.after}}
+    <div class="rc-stack-mini rc-stack-more" data-tooltip="{{stack.after.names}}">+{{stack.after.count}}</div>
+  {{/if}}
+</div>

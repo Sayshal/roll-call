@@ -1,0 +1,55 @@
+<div class="rc-strip">
+  <div class="rc-roundline">
+    <span>{{localize "COMBAT.FIELDS.round.label"}} {{round}}</span>
+    <span class="rc-sides">{{localize "ROLLCALL.Dock.Sides" allies=sides.allies enemies=sides.enemies}}</span>
+    {{#if clock.total}}<span class="rc-clock-total" data-clock="total"></span>{{/if}}
+    {{#if clock.turn}}<span class="rc-clock-turn" data-clock="turn"></span>{{/if}}
+  </div>
+  <section class="rc-blade rc-hilt">
+    <div class="rc-blade-body rc-hilt-body">
+      <div class="rc-upright rc-hilt-head">
+        <div class="rc-hilt-info">
+          <div class="rc-hilt-label">{{localize "COMBAT.FIELDS.round.label"}}</div>
+          <div class="rc-sides">{{localize "ROLLCALL.Dock.Sides" allies=sides.allies enemies=sides.enemies}}</div>
+        </div>
+        <div class="rc-hilt-round">{{round}}</div>
+      </div>
+      {{#if clock}}
+        <div class="rc-upright rc-hilt-clocks">
+          {{#if clock.turn}}
+            <div class="rc-clock-turn" data-clock="turn" data-tooltip
+              aria-label="{{localize 'ROLLCALL.Dock.TurnClock'}}"></div>
+          {{/if}}
+          {{#if clock.total}}
+            <div class="rc-clock-total" data-clock="total" data-tooltip
+              aria-label="{{localize 'ROLLCALL.Dock.CombatClock'}}"></div>
+          {{/if}}
+        </div>
+      {{/if}}
+      {{#if nav.length}}
+        <div class="rc-btnrow">{{#each nav}}{{> rcSeg}}{{/each}}</div>
+      {{/if}}
+    </div>
+    {{#if controls.length}}
+      <div class="rc-btnrow">{{#each controls}}{{> rcSeg}}{{/each}}</div>
+    {{/if}}
+  </section>
+  {{#if canMove}}
+    <div class="rc-grip" data-tooltip aria-label="{{localize 'ROLLCALL.Dock.Move'}}"><i
+        class="fa-solid fa-grip-vertical rc-upright" aria-hidden="true"></i></div>
+  {{/if}}
+  {{#if (or nav.length controls.length)}}
+    <div class="rc-dock-controls">
+      {{#if nav.length}}
+        <div class="rc-btnrow">{{#each nav}}{{> rcSeg}}{{/each}}</div>
+      {{/if}}
+      {{#if controls.length}}
+        <div class="rc-btnrow">{{#each controls}}{{> rcSeg}}{{/each}}</div>
+      {{/if}}
+    </div>
+  {{/if}}
+  {{#each events}}{{> rcEvent}}{{/each}}
+  {{#if divider}}
+    <div class="rc-divider" style="order: {{divider.order}}"><span class="rc-upright">{{divider.label}}</span></div>
+  {{/if}}
+</div>

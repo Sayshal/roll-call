@@ -1,0 +1,634 @@
+.rc-view-blade {
+  --roll-call-tuck-x: -3.75rem;
+  --roll-call-tuck-y: -4rem;
+
+  .rc-upright {
+    transform: skewX(var(--roll-call-unslant));
+  }
+
+  .rc-blade {
+    gap: 0.25rem;
+    display: flex;
+    position: relative;
+    flex: none;
+    flex-direction: column;
+    width: 6rem;
+    transition: width var(--roll-call-dur) var(--roll-call-ease-out);
+    transform: skewX(var(--roll-call-slant));
+  }
+
+  .rc-blade-body {
+    position: relative;
+    height: 8.25rem;
+    border: 0.0625rem solid var(--roll-call-border);
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--roll-call-bg-elev);
+    box-shadow: 0 0.5rem 1.25rem var(--roll-call-shadow);
+    transition:
+      translate var(--roll-call-dur-fast) var(--roll-call-ease-out),
+      border-color var(--roll-call-dur-fast) var(--roll-call-ease-out),
+      height var(--roll-call-dur) var(--roll-call-ease-out);
+  }
+
+  .rc-card:hover .rc-blade-body {
+    translate: 0 -0.1875rem;
+    border-color: var(--roll-call-border-hi);
+  }
+
+  .rc-card-art {
+    inset: 0 -1.625rem;
+    position: absolute;
+    background: var(--roll-call-bg) center top / cover no-repeat;
+    transform: skewX(var(--roll-call-unslant));
+  }
+
+  .rc-stripe {
+    inset: 0 0 auto;
+    z-index: 2;
+    position: absolute;
+    height: 0.1875rem;
+    background: var(--roll-call-disposition);
+  }
+
+  .rc-init {
+    display: flex;
+    z-index: 3;
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    min-width: 1.875rem;
+    height: 1.5rem;
+    padding: 0.1875rem 0.375rem 0;
+    border: 0.0625rem solid var(--roll-call-border-hi);
+    color: var(--roll-call-fg-bright);
+    font: 600 1.375rem/0.9 var(--roll-call-font-display);
+    background: var(--roll-call-scrim);
+
+    &.is-unrolled {
+      color: var(--roll-call-fg-2);
+    }
+  }
+
+  .rc-chip {
+    display: flex;
+    z-index: 3;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.375rem;
+    align-items: center;
+    height: 1.125rem;
+    padding: 0 0.375rem;
+    font-weight: 700;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .rc-chip-ondeck {
+    color: var(--roll-call-ink);
+    background: var(--roll-call-secondary);
+  }
+
+  .rc-chip-hidden {
+    color: var(--roll-call-fg);
+    background: var(--roll-call-bg-elev);
+  }
+
+  .rc-effects {
+    gap: 0.125rem;
+    display: flex;
+    z-index: 3;
+    position: absolute;
+    top: 2.25rem;
+    left: 0.5rem;
+    flex-wrap: wrap;
+    width: 60%;
+
+    img {
+      width: 1rem;
+      height: 1rem;
+      border: none;
+    }
+  }
+
+  .rc-stack {
+    right: 0.5rem;
+    bottom: 3.25rem;
+    left: 0.5rem;
+    justify-content: center;
+  }
+
+  .rc-plate {
+    inset: auto 0 0.3125rem;
+    z-index: 2;
+    position: absolute;
+    padding: 1.625rem 0.5rem 0.375rem 0.625rem;
+    background: linear-gradient(180deg, rgb(from var(--roll-call-bg) r g b / 0%) 0%, var(--roll-call-scrim) 60%);
+  }
+
+  .rc-name {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--roll-call-fg-bright);
+    font: 400 1.1875rem/0.9 var(--roll-call-font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .rc-hp {
+    inset: auto 0 0;
+    z-index: 2;
+    position: absolute;
+    height: 0.3125rem;
+    background: var(--roll-call-hp-track);
+  }
+
+  .rc-hp-estimate {
+    height: auto;
+    padding: 0.0625rem 0.625rem;
+    font: 400 0.6875rem/1 var(--roll-call-font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .rc-btnrow {
+    gap: 0.125rem;
+    display: flex;
+    height: 1.625rem;
+  }
+
+  .rc-seg {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: var(--roll-call-fg-2);
+    font-weight: 700;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    background: var(--roll-call-seg-bg);
+    box-shadow: none;
+    transition:
+      background var(--roll-call-dur-fast),
+      color var(--roll-call-dur-fast);
+
+    > span {
+      gap: 0.375em;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      transform: skewX(var(--roll-call-unslant));
+    }
+
+    &:hover {
+      color: var(--roll-call-title);
+      background: var(--roll-call-bg-hover);
+    }
+
+    &:focus-visible {
+      outline: 0.125rem solid var(--roll-call-accent);
+      outline-offset: 0.125rem;
+    }
+  }
+
+  .rc-seg-cta {
+    flex: 3.2;
+  }
+
+  /* Active and on-deck */
+  .rc-card.is-active {
+    width: 8.5rem;
+
+    .rc-blade-body {
+      height: 11.5rem;
+      border: 0.125rem solid var(--roll-call-accent);
+      animation: rc-active-breathe 2400ms ease-in-out infinite;
+    }
+
+    .rc-init {
+      border-color: transparent;
+      color: var(--roll-call-ink);
+      background: var(--roll-call-cta);
+    }
+
+    .rc-name {
+      color: var(--roll-call-title);
+      font-size: 1.5625rem;
+    }
+  }
+
+  .rc-sweep {
+    inset: 0 auto 0 0;
+    z-index: 1;
+    position: absolute;
+    width: 45%;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgb(from var(--roll-call-accent) r g b / 28%), transparent);
+    animation: rc-ember-sweep 3200ms linear infinite;
+  }
+
+  .rc-card.is-ondeck {
+    width: 6.75rem;
+
+    .rc-blade-body {
+      height: 9.25rem;
+      border-color: rgb(from var(--roll-call-secondary) r g b / 70%);
+      box-shadow:
+        0 0 0.875rem 0 rgb(from var(--roll-call-secondary) r g b / 25%),
+        0 0.5rem 1.25rem var(--roll-call-shadow);
+    }
+  }
+
+  /* Defeated and hidden */
+  .rc-card.is-defeated {
+    width: 4rem;
+
+    .rc-card-art {
+      filter: grayscale(1) brightness(0.45) contrast(1.1);
+    }
+
+    .rc-name {
+      color: var(--roll-call-fg-2);
+      text-decoration: line-through 0.125rem var(--roll-call-danger);
+    }
+  }
+
+  .rc-slash {
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    left: -20%;
+    width: 140%;
+    height: 0.1875rem;
+    background: var(--roll-call-danger);
+    box-shadow: 0 0 0.625rem var(--roll-call-danger);
+    transform: rotate(-62deg);
+  }
+
+  .rc-card.is-hidden {
+    opacity: 0.55;
+
+    .rc-blade-body {
+      border: 0.125rem dashed var(--roll-call-fg-2);
+      box-shadow: none;
+    }
+  }
+
+  /* Toolbar and round divider */
+  .rc-hilt {
+    order: -1;
+    width: 6.75rem;
+  }
+
+  .rc-hilt-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-color: var(--roll-call-border-hi);
+    cursor: default;
+    background: linear-gradient(160deg, var(--roll-call-bg-elev) 0%, var(--roll-call-bg) 100%);
+
+    .rc-btnrow {
+      padding: 0 0.375rem 0.375rem;
+    }
+  }
+
+  .rc-hilt-head {
+    gap: 0.375rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.625rem 1.125rem 0 1rem;
+  }
+
+  .rc-hilt-info {
+    gap: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .rc-hilt-clocks {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: auto;
+    padding: 0 0.625rem 0.375rem 0.75rem;
+  }
+
+  .rc-clock-turn {
+    font: 400 1.375rem/0.9 var(--roll-call-font-display);
+  }
+
+  .rc-clock-total {
+    color: var(--roll-call-fg-2);
+    font-weight: 600;
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+  }
+
+  .rc-sides {
+    font-weight: 600;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .rc-hilt-label {
+    color: var(--roll-call-fg-2);
+    font-weight: 700;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  .rc-hilt-round {
+    align-self: center;
+    color: var(--roll-call-title);
+    font: 400 4rem/0.8 var(--roll-call-font-display);
+  }
+
+  &[data-edge='bottom'] .rc-blade {
+    flex-direction: column-reverse;
+  }
+
+  .rc-grip {
+    display: flex;
+    flex: none;
+    justify-content: center;
+    align-items: center;
+    order: 9999;
+    width: 1rem;
+    height: 8.25rem;
+    color: var(--roll-call-fg-2);
+    cursor: grab;
+    background: var(--roll-call-seg-bg);
+    transform: skewX(var(--roll-call-slant));
+  }
+
+  .rc-divider {
+    display: flex;
+    flex: none;
+    justify-content: center;
+    align-items: center;
+    width: 1.75rem;
+    height: 8.25rem;
+    border: 0.0625rem dashed var(--roll-call-accent);
+    color: var(--roll-call-title);
+    font: 400 1.375rem/1 var(--roll-call-font-display);
+    background: var(--roll-call-seg-bg);
+    transform: skewX(var(--roll-call-slant));
+  }
+
+  .rc-roundline {
+    gap: 0.25rem 0.75rem;
+    grid-template-columns: 1fr auto;
+    display: none;
+    padding: 0.25rem 0.5rem;
+    border-bottom: 0.0625rem solid var(--roll-call-accent);
+    color: var(--roll-call-title);
+    font: 400 1.125rem/1 var(--roll-call-font-display);
+    text-transform: uppercase;
+    background: var(--roll-call-seg-bg);
+
+    > * {
+      margin: 0;
+      padding: 0;
+      font: inherit;
+      letter-spacing: inherit;
+    }
+  }
+
+  .rc-dock-controls {
+    gap: 0.125rem;
+    display: none;
+    flex-direction: column;
+  }
+
+  /* Vertical dock: upright cards one card wide, buttons in a row under each card */
+  &[data-orientation='vertical'] {
+    --roll-call-slant: 0deg;
+
+    padding: 0;
+
+    .rc-hilt {
+      display: none;
+    }
+
+    .rc-roundline,
+    .rc-divider,
+    .rc-grip,
+    .rc-dock-controls {
+      width: 0;
+      min-width: 100%;
+    }
+
+    .rc-roundline {
+      display: grid;
+      align-self: stretch;
+      order: -1;
+    }
+
+    .rc-card {
+      gap: 0.125rem;
+      width: 7rem;
+    }
+
+    .rc-card .rc-blade-body {
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--roll-call-slant-x)), calc(100% - var(--roll-call-slant-x)) 100%, 0 100%);
+      height: 6.5rem;
+    }
+
+    .rc-card.is-ondeck .rc-blade-body {
+      height: 7rem;
+    }
+
+    .rc-card.is-active .rc-blade-body {
+      height: 9rem;
+    }
+
+    .rc-card.is-active .rc-name {
+      font-size: 1.3125rem;
+    }
+
+    .rc-card.is-defeated .rc-blade-body {
+      height: 3rem;
+    }
+
+    .rc-card-art {
+      inset: 0;
+    }
+
+    .rc-card .rc-btnrow {
+      height: 1.375rem;
+    }
+
+    .rc-seg-label {
+      display: none;
+    }
+
+    .rc-divider,
+    .rc-grip {
+      align-self: stretch;
+      height: 1.5rem;
+    }
+
+    .rc-grip {
+      height: 1rem;
+
+      i {
+        rotate: 90deg;
+      }
+    }
+
+    .rc-dock-controls {
+      display: flex;
+      align-self: stretch;
+      order: 10000;
+    }
+  }
+
+  /* Minimal: name-only cards, buttons on hover, compact round line instead of the hilt */
+  &.rc-minimal {
+    .rc-hilt,
+    .rc-card-art,
+    .rc-sweep,
+    .rc-slash,
+    .rc-effects,
+    .rc-init,
+    .rc-hp,
+    .rc-chip,
+    .rc-group,
+    .rc-target {
+      display: none;
+    }
+
+    .rc-roundline {
+      display: grid;
+      order: -1;
+    }
+
+    .rc-stack {
+      translate: 0 -50%;
+      top: 50%;
+      bottom: auto;
+      left: auto;
+    }
+
+    .rc-dock-controls {
+      display: flex;
+      order: 10000;
+    }
+
+    &[data-orientation='horizontal'] {
+      .rc-roundline,
+      .rc-dock-controls {
+        align-self: flex-start;
+        width: 8rem;
+      }
+    }
+
+    .rc-card .rc-blade-body,
+    .rc-card.is-ondeck .rc-blade-body,
+    .rc-card.is-active .rc-blade-body,
+    .rc-card.is-defeated .rc-blade-body {
+      height: 2.25rem;
+    }
+
+    .rc-plate {
+      inset: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 0.5rem;
+      background: none;
+    }
+
+    .rc-name,
+    .rc-card.is-active .rc-name {
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+      font-size: 1.125rem;
+    }
+
+    .rc-card .rc-btnrow {
+      opacity: 0;
+      z-index: 4;
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 2.25rem;
+      pointer-events: none;
+      transition: opacity var(--roll-call-dur-fast);
+    }
+
+    .rc-card .rc-seg {
+      flex: none;
+      width: 1.75rem;
+    }
+
+    .rc-seg-label {
+      display: none;
+    }
+
+    .rc-card:is(:hover, :focus-within) .rc-btnrow {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &.rc-minimal[data-orientation='horizontal'] :is(.rc-divider, .rc-grip) {
+    height: 2.25rem;
+  }
+
+  &[data-edge='right'] .rc-card .rc-blade-body {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, var(--roll-call-slant-x) 100%, 0 calc(100% - var(--roll-call-slant-x)));
+  }
+}
+
+@keyframes rc-active-breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0.0625rem var(--roll-call-accent),
+      0 0 1.125rem 0.125rem var(--roll-call-glow),
+      0 0.625rem 1.5rem var(--roll-call-shadow);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 0.0625rem var(--roll-call-accent),
+      0 0 2rem 0.375rem var(--roll-call-glow-hot),
+      0 0.625rem 1.5rem var(--roll-call-shadow);
+  }
+}
+
+@keyframes rc-ember-sweep {
+  0% {
+    translate: -120% 0;
+  }
+
+  55%,
+  100% {
+    translate: 240% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-view-blade * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

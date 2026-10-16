@@ -1,0 +1,27 @@
+<div class="rc-strip">
+  <section class="rc-codex-colophon">
+    {{#if canMove}}
+      <div class="rc-grip" data-tooltip aria-label="{{localize 'ROLLCALL.Dock.Move'}}"><i
+          class="fa-solid fa-grip-vertical" aria-hidden="true"></i></div>
+    {{/if}}
+    <div class="rc-codex-head">
+      <span class="rc-codex-label">{{localize "COMBAT.FIELDS.round.label"}}</span>
+      <span class="rc-codex-numeral">{{round}}</span>
+      {{#if clock.turn}}<span class="rc-clock-turn" data-clock="turn" data-tooltip
+          aria-label="{{localize 'ROLLCALL.Dock.TurnClock'}}"></span>{{/if}}
+    </div>
+    <div class="rc-codex-meta">
+      <span class="rc-sides">{{localize "ROLLCALL.Dock.Sides" allies=sides.allies enemies=sides.enemies}}</span>
+      {{#if clock.total}}<span class="rc-clock-total" data-clock="total" data-tooltip
+          aria-label="{{localize 'ROLLCALL.Dock.CombatClock'}}"></span>{{/if}}
+    </div>
+    {{#if nav.length}}
+      <div class="rc-codex-row">{{#each nav}}{{> rcSeg}}{{/each}}</div>
+    {{/if}}
+    {{#if controls.length}}
+      <div class="rc-codex-rule"></div>
+      <div class="rc-codex-row">{{#each controls}}{{> rcSeg}}{{/each}}</div>
+    {{/if}}
+  </section>
+  {{#each events}}{{> rcEvent}}{{/each}}
+</div>

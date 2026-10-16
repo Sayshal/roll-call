@@ -1,3 +1,74 @@
-:root {
-  --roll-call-accent: rgb(88 101 242);
+.roll-call {
+  --roll-call-accent: var(--atlas-primary);
+  --roll-call-accent-soft: rgb(from var(--atlas-primary) r g b / 14%);
+  --roll-call-bg: var(--atlas-bg);
+  --roll-call-bg-elev: var(--atlas-bg-lighter);
+  --roll-call-bg-hover: var(--atlas-button-hover);
+  --roll-call-border: var(--atlas-border);
+  --roll-call-border-hi: var(--atlas-border-light);
+  --roll-call-cta: linear-gradient(100deg, color-mix(in oklab, var(--atlas-primary) 70%, rgb(0 0 0)) 0%, var(--atlas-primary) 100%);
+  --roll-call-danger: var(--atlas-error);
+  --roll-call-dur: 220ms;
+  --roll-call-dur-fast: 120ms;
+  --roll-call-ease-out: cubic-bezier(0.16, 0.84, 0.24, 1);
+  --roll-call-fg: var(--atlas-text);
+  --roll-call-fg-2: var(--atlas-text-secondary);
+  --roll-call-fg-bright: color-mix(in oklab, var(--atlas-text) 55%, rgb(255 255 255));
+  --roll-call-font-display: 'Modesto Condensed', var(--font-sans);
+  --roll-call-glow: rgb(from var(--atlas-primary) r g b / 35%);
+  --roll-call-glow-hot: rgb(from var(--atlas-primary) r g b / 60%);
+  --roll-call-hp-track: rgb(0 0 0 / 60%);
+  --roll-call-ink: var(--atlas-bg);
+  --roll-call-obscure: rgb(from var(--atlas-bg) r g b / 88%);
+  --roll-call-ok: var(--atlas-success);
+  --roll-call-scrim: rgb(from var(--atlas-bg) r g b / 94%);
+  --roll-call-secondary: var(--atlas-accent);
+  --roll-call-seg-bg: rgb(from var(--atlas-bg) r g b / 90%);
+  --roll-call-shadow: rgb(0 0 0 / 55%);
+  --roll-call-slant: -12deg;
+  --roll-call-slant-x: 1.25rem;
+  --roll-call-temp: rgb(64 140 230);
+  --roll-call-title: var(--atlas-title-text);
+  --roll-call-unslant: calc(var(--roll-call-slant) * -1);
+  --roll-call-warn: var(--atlas-warning);
+}
+
+.roll-call .rc-rows {
+  gap: 0.375rem;
+  display: grid;
+
+  .rc-row {
+    gap: 0.5rem;
+    grid-template-columns: repeat(var(--roll-call-row-fields), minmax(0, 1fr)) 2rem;
+    display: grid;
+    align-items: center;
+  }
+
+  .rc-row-header {
+    color: var(--color-form-label);
+    font-size: var(--font-size-12);
+  }
+}
+
+.rc-focus-scene-navigation #scene-navigation,
+.rc-focus-players #players,
+.rc-focus-hotbar #hotbar,
+.rc-focus-camera-views #camera-views,
+.rc-focus-scene-controls #scene-controls-layers li:has([data-control]:not([data-control='tokens'])),
+.rc-focus-sidebar-tabs #sidebar-tabs li:has([data-tab]:not([data-tab='chat'], [data-tab='combat'])) {
+  display: none;
+}
+
+.roll-call .is-obscured {
+  box-shadow: inset 0 0 0 100rem var(--roll-call-obscure);
+}
+
+.roll-call .rc-stack-mini.is-obscured {
+  box-shadow:
+    inset 0 0 0 100rem var(--roll-call-obscure),
+    0 0.125rem 0.375rem var(--roll-call-shadow);
+}
+
+.rc-hide-combat-tab #sidebar-tabs li:has([data-tab='combat']) {
+  display: none;
 }

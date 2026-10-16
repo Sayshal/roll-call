@@ -1,0 +1,56 @@
+<section
+  class="rc-codex rc-card {{#if card.active}}is-active{{/if}} {{#if card.onDeck}}is-ondeck{{/if}} {{#if card.acted}}is-acted{{/if}} {{#if card.defeated}}is-defeated{{/if}} {{#if card.hidden}}is-hidden{{/if}} {{#if card.first}}is-first{{/if}}"
+  data-combatant-id="{{card.id}}" {{#if card.canDrag}}draggable="true"
+  {{/if}}style="order: {{card.order}}; --roll-call-depth: {{card.depth}}; --roll-call-disposition: {{card.disposition}}">
+  <div class="rc-codex-frame">
+    {{#if card.onDeck}}
+      <div class="rc-codex-tab">{{localize "ROLLCALL.Dock.OnDeck"}}</div>
+    {{/if}}
+    <div class="rc-codex-face rc-card-body" data-action="activate" data-combatant-id="{{card.id}}">
+      <div class="rc-codex-gem"></div>
+      {{#if card.targeted}}
+        <div class="rc-target" data-tooltip aria-label="{{localize 'ROLLCALL.Dock.Targeted'}}"><i
+            class="fa-solid fa-location-crosshairs" aria-hidden="true"></i></div>
+      {{/if}}
+      <div class="rc-codex-window {{#if card.obscured}}is-obscured{{/if}}" style="background-image: url('{{card.img}}')">
+        {{#if card.hidden}}
+          <i class="fa-solid fa-eye-slash rc-codex-ghost" data-tooltip
+            aria-label="{{localize 'ATLAS.Common.Hidden'}}"></i>
+        {{/if}}
+        {{#if card.defeated}}
+          <div class="rc-codex-strike"></div>
+        {{/if}}
+        {{#if card.effects.length}}
+          <div class="rc-effects">
+            {{#each card.effects}}<img src="{{img}}" alt="{{name}}" data-tooltip="{{name}}">{{/each}}
+          </div>
+        {{/if}}
+      </div>
+      {{#if card.stack}}{{> rcStack stack=card.stack}}{{/if}}
+      <div class="rc-plate">
+        {{#if card.legendary}}{{> rcLegendary legendary=card.legendary}}{{/if}}
+        <div class="rc-name">{{card.name}}</div>
+        {{#if (or card.group card.stack.count)}}
+          <div class="rc-group">{{card.group}}{{#if card.stack.count}} ×{{card.stack.count}}{{/if}}</div>
+        {{/if}}
+      </div>
+      {{#if card.health}}
+        <div class="rc-hp">
+          <div class="rc-hp-fill is-{{card.health.tier}}"
+            style="width: {{card.health.percent}}%;{{#if card.health.color}} background: {{card.health.color}};{{/if}}">
+          </div>
+          {{#if card.health.temp}}
+            <div class="rc-hp-temp" style="width: {{card.health.temp}}%"></div>
+          {{/if}}
+        </div>
+      {{else if card.estimate}}
+        <div class="rc-hp rc-hp-estimate is-{{card.estimate.tier}}"
+          {{#if card.estimate.color}}style="color: {{card.estimate.color}}" {{/if}}>{{card.estimate.label}}</div>
+      {{/if}}
+    </div>
+    <div class="rc-init {{#unless card.rolled}}is-unrolled{{/unless}}"><span>{{card.initiative}}</span></div>
+  </div>
+  {{#if card.buttons.length}}
+    <div class="rc-codex-drawer">{{#each card.buttons}}{{> rcSeg}}{{/each}}</div>
+  {{/if}}
+</section>

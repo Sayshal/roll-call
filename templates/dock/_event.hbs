@@ -1,0 +1,10 @@
+<div class="rc-event" style="order: {{order}}" data-event-id="{{id}}" data-tooltip="{{label}} · {{when}}">
+  <i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>
+  <span class="rc-event-text">
+    <span class="rc-event-label">{{label}}</span>
+    <span class="rc-event-when">{{when}}</span>
+  </span>
+  {{#if canRemove}}<button type="button" class="rc-event-remove" data-action="removeEvent" data-event-id="{{id}}"
+      data-tooltip aria-label="{{localize 'ATLAS.Common.Remove'}}"><i class="fa-solid fa-xmark"
+        aria-hidden="true"></i></button>{{/if}}
+</div>

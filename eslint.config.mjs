@@ -57,6 +57,7 @@ export default [
         JournalEntryPage: 'readonly',
         Macro: 'readonly',
         MINSTREL: 'readonly',
+        ROLLCALL: 'readonly',
         Peddler: 'readonly',
         PIXI: 'readonly',
         Playlist: 'readonly',

@@ -1,0 +1,18 @@
+{{#*inline "rcVsTile"}}
+  <div class="rc-vs-tile {{#unless img}}is-unknown{{/unless}}" style="--rc-vs-i: {{index}}">
+    <div class="rc-vs-art" {{#if img}}style="background-image: url('{{img}}')" {{/if}}>{{#unless img}}?{{/unless}}</div>
+    <div class="rc-vs-name">{{name}}{{#if (gt count 1)}} <span class="rc-vs-count">×{{count}}</span>{{/if}}</div>
+    {{#if (ne initiative null)}}
+      <div class="rc-vs-init">{{initiative}}</div>
+    {{/if}}
+  </div>
+{{/inline}}
+<div class="rc-vs-screen" data-action="dismiss">
+  <div class="rc-vs-side is-allies">
+    {{#each allies}}{{> rcVsTile index=@index}}{{/each}}
+  </div>
+  <div class="rc-vs-mark">VS</div>
+  <div class="rc-vs-side is-enemies">
+    {{#each enemies}}{{> rcVsTile index=@index}}{{/each}}
+  </div>
+</div>

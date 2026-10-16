@@ -1,0 +1,29 @@
+<div class="roll-call rc-announce rc-announce-{{view}} is-{{variant}}" aria-live="polite">
+  {{#if glow}}
+    <div class="rc-edge"></div>
+  {{/if}}
+  {{#if banner}}
+    <div class="rc-banner">
+      <div class="rc-banner-line"></div>
+      <div class="rc-banner-line is-bottom"></div>
+      <div class="rc-banner-tip"></div>
+      <div class="rc-banner-roller"></div>
+      <div class="rc-banner-roller is-right"></div>
+      <div class="rc-banner-row rc-upright">
+        {{#if img}}
+          <div class="rc-banner-art" style="background-image: url('{{img}}')"></div>
+        {{/if}}
+        <div class="rc-banner-text">
+          <div class="rc-banner-title">{{title}}</div>
+          {{#if subtitle}}
+            <div class="rc-banner-sub">{{subtitle}}</div>
+          {{/if}}
+        </div>
+        {{#if tag}}
+          <div class="rc-banner-tag"><span class="rc-upright"><i class="fa-solid fa-bell" aria-hidden="true"></i>
+              {{tag}}</span></div>
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
+</div>

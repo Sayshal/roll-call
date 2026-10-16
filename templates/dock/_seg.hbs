@@ -1,0 +1,6 @@
+<button type="button" class="rc-seg {{#if cta}}rc-seg-cta{{/if}} {{#if danger}}rc-seg-danger{{/if}} {{cssClass}}"
+  {{#if action}}data-action="{{action}}" {{/if}} {{#if combatantId}}data-combatant-id="{{combatantId}}" {{/if}}
+  data-tooltip{{#if tooltip}}="{{localize tooltip}}" {{/if}} aria-label="{{localize label}}">
+  <span><i class="fa-solid {{icon}}" aria-hidden="true"></i>{{#if text}}<span
+        class="rc-seg-label">{{localize label}}</span>{{/if}}</span>
+</button>

@@ -1,0 +1,4 @@
+<button type="button" class="rc-legendary {{upright}} {{#if legendary.ready}}is-ready{{/if}}"
+  data-action="spendLegendary" data-tooltip aria-label="{{legendary.label}}">
+  {{#each legendary.pips}}<span class="rc-pip {{#if this}}is-left{{/if}}"></span>{{/each}}
+</button>
