@@ -20,21 +20,15 @@ Roll Call puts initiative front and center with a customizable combat dock, clea
 
 **A combat dock.** Keep the turn order on the canvas, where everyone can see it. Snap the dock to a screen edge or drag it wherever it fits, with the GM's turn controls close at hand.
 
-![Codex dock](https://wiki.3deathsaves.com/roll-call/dock-codex.png)
-
 **Pick your style.** Go with the arched portraits of Codex or the angled panels of Blade. Everyone can choose the look they prefer.
 
 ![Blade dock](https://wiki.3deathsaves.com/roll-call/dock-blade.png)
 
 **Group your combatants.** Keep a squad, a group of enemies, or a summoner and their summons together on one card. It flips to whoever's acting, and Shift-clicking End Turn wraps up the whole stack.
 
-![Stacked card and round event](https://wiki.3deathsaves.com/roll-call/stacks-events.png)
-
 **Make turns hard to miss.** Turn banners, screen glows, token camera jumps, and an Up Next marker help everyone keep track of who's up, who's next, and whether they should probably stop checking their inventory.
 
 ![Turn banner](https://wiki.3deathsaves.com/roll-call/turn-banner.png)
-
-![Turn and Up Next markers](https://wiki.3deathsaves.com/roll-call/turn-markers.png)
 
 **Keep secrets secret.** Decide what players can see for each token disposition. Mask names, fade portraits, and show health as labels like Bloodied instead of giving away exact numbers.
 
