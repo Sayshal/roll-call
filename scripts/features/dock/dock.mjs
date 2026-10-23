@@ -198,6 +198,15 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     window.addEventListener('resize', reposition);
     const resizes = new ResizeObserver(reposition);
     for (const id of ['ui-left', 'ui-left-column-1']) resizes.observe(document.getElementById(id));
+    const column = document.getElementById('ui-left-column-1');
+    const observeColumn = () => {
+      for (const el of column.children) resizes.observe(el);
+    };
+    observeColumn();
+    new MutationObserver(() => {
+      observeColumn();
+      reposition();
+    }).observe(column, { childList: true });
     const mutations = new MutationObserver(reposition);
     mutations.observe(document.getElementById('ui-left'), { childList: true, attributes: true, attributeFilter: ['style', 'class'] });
     mutations.observe(document.getElementById('interface'), { attributes: true, attributeFilter: ['style', 'class'] });
