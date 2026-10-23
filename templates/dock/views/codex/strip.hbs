@@ -5,8 +5,12 @@
           class="fa-solid fa-grip-vertical" aria-hidden="true"></i></div>
     {{/if}}
     <div class="rc-codex-head">
-      <span class="rc-codex-label">{{localize "COMBAT.FIELDS.round.label"}}</span>
-      <span class="rc-codex-numeral">{{round}}</span>
+      {{#if started}}
+        <span class="rc-codex-label">{{localize "COMBAT.FIELDS.round.label"}}</span>
+        <span class="rc-codex-numeral">{{round}}</span>
+      {{else}}
+        <span class="rc-codex-label">{{localize "ROLLCALL.Dock.NotStarted"}}</span>
+      {{/if}}
       {{#if clock.turn}}<span class="rc-clock-turn" data-clock="turn" data-tooltip
           aria-label="{{localize 'ROLLCALL.Dock.TurnClock'}}"></span>{{/if}}
     </div>

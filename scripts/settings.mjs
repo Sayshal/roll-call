@@ -105,6 +105,17 @@ export function registerSettings() {
     scope: 'world',
     type: new BooleanField({ initial: false })
   });
+  r(MODULE.ID, MODULE.SETTINGS.DOCK_PLAYER_VISIBILITY, {
+    name: 'ROLLCALL.Settings.DockPlayerVisibility.Name',
+    hint: 'ROLLCALL.Settings.DockPlayerVisibility.Hint',
+    scope: 'world',
+    type: new StringField({
+      initial: 'showCombat',
+      required: true,
+      blank: false,
+      choices: { showCombat: 'ROLLCALL.Settings.DockPlayerVisibility.Combat', showEncounter: 'ROLLCALL.Settings.DockPlayerVisibility.Encounter' }
+    })
+  });
   r(MODULE.ID, MODULE.SETTINGS.DOCK_PLACEMENT, {
     scope: 'user',
     config: false,

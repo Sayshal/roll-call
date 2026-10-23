@@ -1,6 +1,6 @@
 <div class="rc-strip">
   <div class="rc-roundline">
-    <span>{{localize "COMBAT.FIELDS.round.label"}} {{round}}</span>
+    <span>{{#if started}}{{localize "COMBAT.FIELDS.round.label"}} {{round}}{{else}}{{localize "ROLLCALL.Dock.NotStarted"}}{{/if}}</span>
     <span class="rc-sides">{{localize "ROLLCALL.Dock.Sides" allies=sides.allies enemies=sides.enemies}}</span>
     {{#if clock.total}}<span class="rc-clock-total" data-clock="total"></span>{{/if}}
     {{#if clock.turn}}<span class="rc-clock-turn" data-clock="turn"></span>{{/if}}
@@ -9,10 +9,10 @@
     <div class="rc-blade-body rc-hilt-body">
       <div class="rc-upright rc-hilt-head">
         <div class="rc-hilt-info">
-          <div class="rc-hilt-label">{{localize "COMBAT.FIELDS.round.label"}}</div>
+          <div class="rc-hilt-label">{{#if started}}{{localize "COMBAT.FIELDS.round.label"}}{{else}}{{localize "ROLLCALL.Dock.NotStarted"}}{{/if}}</div>
           <div class="rc-sides">{{localize "ROLLCALL.Dock.Sides" allies=sides.allies enemies=sides.enemies}}</div>
         </div>
-        <div class="rc-hilt-round">{{round}}</div>
+        {{#if started}}<div class="rc-hilt-round">{{round}}</div>{{/if}}
       </div>
       {{#if clock}}
         <div class="rc-upright rc-hilt-clocks">

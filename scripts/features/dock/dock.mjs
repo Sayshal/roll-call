@@ -157,6 +157,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     MODULE.SETTINGS.DOCK_HIDDEN,
     MODULE.SETTINGS.DOCK_LOCKED,
     MODULE.SETTINGS.DOCK_MINIMAL,
+    MODULE.SETTINGS.DOCK_PLAYER_VISIBILITY,
     MODULE.SETTINGS.DOCK_STACKS,
     MODULE.SETTINGS.DOCK_TUCK,
     MODULE.SETTINGS.DOCK_VIEW,
@@ -226,7 +227,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     if (!combat?.combatants.some((combatant) => combatant.visible)) return false;
     const optedOut = game.settings.get(MODULE.ID, MODULE.SETTINGS.DOCK_HIDDEN);
     if (game.user.isGM) return !optedOut;
-    if (!combat.started) return false;
+    if (!combat.started && game.settings.get(MODULE.ID, MODULE.SETTINGS.DOCK_PLAYER_VISIBILITY) !== 'showEncounter') return false;
     return !optedOut || game.settings.get(MODULE.ID, MODULE.SETTINGS.DOCK_LOCKED);
   }
 

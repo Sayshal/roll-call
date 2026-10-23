@@ -33,6 +33,7 @@ const SETTINGS = {
   DOCK_LOCKED: 'dockLocked',
   DOCK_MINIMAL: 'dockMinimal',
   DOCK_PLACEMENT: 'dockPlacement',
+  DOCK_PLAYER_VISIBILITY: 'dockPlayerVisibility',
   DOCK_SCALE: 'dockScale',
   DOCK_STACKS: 'dockStacks',
   DOCK_TUCK: 'dockTuck',

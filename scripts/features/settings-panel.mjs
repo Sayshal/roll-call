@@ -29,6 +29,7 @@ export class RollCallSettings extends ApplicationV2 {
             MODULE.SETTINGS.DOCK_HIDDEN,
             MODULE.SETTINGS.DOCK_STACKS,
             MODULE.SETTINGS.DOCK_LOCKED,
+            MODULE.SETTINGS.DOCK_PLAYER_VISIBILITY,
             MODULE.SETTINGS.DOCK_FORCED_EDGE,
             MODULE.SETTINGS.CARD_ELEMENTS
           ]
