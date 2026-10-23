@@ -195,6 +195,12 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     onSettingChange(this.#SETTING_KEYS, refresh);
     const reposition = foundry.utils.debounce(() => dock.rendered && dock.#reposition(), 250);
     window.addEventListener('resize', reposition);
+    const resizes = new ResizeObserver(reposition);
+    for (const id of ['ui-left', 'ui-left-column-1']) resizes.observe(document.getElementById(id));
+    const mutations = new MutationObserver(reposition);
+    mutations.observe(document.getElementById('ui-left'), { childList: true, attributes: true, attributeFilter: ['style', 'class'] });
+    mutations.observe(document.getElementById('interface'), { attributes: true, attributeFilter: ['style', 'class'] });
+    Hooks.on('changeSidebarTab', reposition);
     Hooks.on('collapseSidebar', () => dock.rendered && dock.#followSidebar());
     for (const hook of ['renderHotbar', 'renderPlayers', 'renderSceneControls', 'renderSceneNavigation']) Hooks.on(hook, reposition);
     for (const app of ['SettingsConfig', RollCallSettings.name]) {
