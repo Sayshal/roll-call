@@ -20,7 +20,7 @@ export class AutoDefeat {
     if (adapter.healthFraction(actor) !== 0) return;
     for (const combat of game.combats) {
       if (!combat.started) continue;
-      for (const combatant of combat.combatants) if (combatant.actor === actor && !adapter.isDefeated(combatant)) toggleDefeated(combatant);
+      for (const combatant of combat.combatants) if (combatant.token && combatant.actor === actor && !adapter.isDefeated(combatant)) toggleDefeated(combatant);
     }
   }
 }

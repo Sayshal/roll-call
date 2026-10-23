@@ -47,12 +47,15 @@ export function playCombatSound(combat, announcement) {
 }
 
 /**
- * Toggle a combatant's defeated state and status effect.
+ * Toggle a combatant's defeated state, and its defeated status effect when the token exists or the actor is linked.
  * @param {Combatant} combatant The combatant.
  * @returns {Promise<void>} Resolves after both updates.
  */
-export function toggleDefeated(combatant) {
-  return ui.combat._onToggleDefeatedStatus(combatant);
+export async function toggleDefeated(combatant) {
+  const isDefeated = !combatant.isDefeated;
+  await combatant.update({ defeated: isDefeated });
+  const actor = combatant.token || combatant.actor?.prototypeToken.actorLink ? combatant.actor : null;
+  await actor?.toggleStatusEffect(CONFIG.specialStatusEffects.DEFEATED, { overlay: true, active: isDefeated });
 }
 
 /**
