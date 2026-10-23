@@ -1,18 +1,9 @@
 ## New Features
 
-- A dock too long for its edge now hides the cards that do not fit, fades the cut ends and scrolls with the mouse wheel instead of shrinking, in every tuck mode, so Dock Scale applies in full
-- Health labels on tokens now scale with the grid and token size, with a new per-user Health Label Size setting
-- New per-device Card Art setting to show actor portraits instead of token images on dock cards
-- New Up Next Label setting with Blade or Codex badge styles, badge font, background and outline colors that default to the theme, and an optional image in place of the badge; the badge scales with grid and token size
-- Renamed the On Deck marker to Up Next; the marker can be an arc, a ring or off, and always uses the token's disposition color
+- Health estimate labels now render above all tokens and are removed when the token is deleted
+- New Player Dock Visibility world setting with Show on Combat Start and Show on Encounter Creation choices; before combat starts, the Blade and Codex views show "Not Started" in place of the round number
+- The dock now repositions when the left UI changes size or style, when the sidebar tab changes, and when panels are added to or resized in the left UI column
 
 ## Bug Fixes
 
-- Fixed health bucket colors resetting to empty when saving the Roll Call settings panel without touching them
-- The dock's settings gear now opens the Roll Call settings panel, and the dock scale preview works from it
-
-## Changes
-
-- Dock tuck now defaults to off
-- New Canvas tab in the settings panel for the Up Next marker, health labels on tokens, target icons and summon lines
-- Turn reminders announce once per combatant group instead of once per member
+- Marking a combatant defeated from the dock no longer applies the defeated status to the base actor when the combatant's token was deleted and the actor is unlinked; auto-defeat skips combatants without a token
