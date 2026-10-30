@@ -1,6 +1,6 @@
 import { getAdapter } from '../adapters/registry.mjs';
 import { MODULE } from '../constants.mjs';
-import { onSettingChange } from './setting-menu.mjs';
+import { cachedSetting, onSettingChange } from './setting-menu.mjs';
 
 /**
  * Health as a whole percent.
@@ -23,7 +23,7 @@ onSettingChange([MODULE.SETTINGS.HEALTH_BUCKETS], () => (buckets = null));
  * @returns {{label: string, threshold: number, color: string|null}|null} Bucket, or null when Health Estimate is off, the actor has no health, or no buckets exist.
  */
 export function healthEstimate(actor) {
-  if (!game.settings.get(MODULE.ID, MODULE.SETTINGS.HEALTH_ESTIMATE_ENABLED)) return null;
+  if (!cachedSetting(MODULE.SETTINGS.HEALTH_ESTIMATE_ENABLED)) return null;
   const adapter = getAdapter();
   const fraction = adapter.healthFraction(actor);
   if (fraction == null) return null;

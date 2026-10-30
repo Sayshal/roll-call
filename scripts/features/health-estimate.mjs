@@ -1,5 +1,5 @@
 import { MODULE } from '../constants.mjs';
-import { canSee, healthEstimate, onSettingChange } from '../utils/_module.mjs';
+import { cachedSetting, canSee, healthEstimate, onSettingChange } from '../utils/_module.mjs';
 
 const { PreciseText } = foundry.canvas.containers;
 
@@ -43,7 +43,7 @@ export class HealthEstimate {
   static #refreshLabel(token, flags) {
     const contentChanged = flags.refreshState || flags.refreshBars || flags.refreshNameplate || flags.refreshSize;
     if (!(contentChanged || flags.refreshPosition || flags.refreshVisibility)) return;
-    const mode = game.settings.get(MODULE.ID, MODULE.SETTINGS.HEALTH_CANVAS);
+    const mode = cachedSetting(MODULE.SETTINGS.HEALTH_CANVAS);
     if (contentChanged && !HealthEstimate.#updateContent(token, mode)) return;
     const label = HealthEstimate.#labels.get(token);
     if (!label || label.destroyed) return;
@@ -60,7 +60,7 @@ export class HealthEstimate {
    */
   static #updateContent(token, mode) {
     const combatant = token.combatant;
-    const on = game.settings.get(MODULE.ID, MODULE.SETTINGS.HEALTH_ESTIMATE_ENABLED);
+    const on = cachedSetting(MODULE.SETTINGS.HEALTH_ESTIMATE_ENABLED);
     const estimate = on && mode !== 'never' && combatant?.combat.started && canSee(game.user, combatant, 'estimate') ? healthEstimate(token.actor) : null;
     if (!estimate) {
       HealthEstimate.#removeLabel(token);
@@ -78,7 +78,7 @@ export class HealthEstimate {
     }
     label.text = estimate.label;
     label.style.fill = estimate.color ?? CONFIG.canvasTextStyle.fill;
-    label.style.fontSize = 24 * game.settings.get(MODULE.ID, MODULE.SETTINGS.HEALTH_SCALE);
+    label.style.fontSize = 24 * cachedSetting(MODULE.SETTINGS.HEALTH_SCALE);
     label.scale.set(canvas.dimensions.uiScale * token.document.width);
     return true;
   }

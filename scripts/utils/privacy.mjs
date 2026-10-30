@@ -1,5 +1,6 @@
 import { MODULE } from '../constants.mjs';
 import { combatantDisposition } from './combat.mjs';
+import { cachedSetting } from './setting-menu.mjs';
 
 /** @type {Object<number, string>} Token disposition to its constant name, e.g. `-1` to `HOSTILE`. */
 const DISPOSITION_NAMES = foundry.utils.invertObject(CONST.TOKEN_DISPOSITIONS);
@@ -12,10 +13,10 @@ const DISPOSITION_NAMES = foundry.utils.invertObject(CONST.TOKEN_DISPOSITIONS);
  * @returns {boolean} Visibility.
  */
 export function canSee(viewer, combatant, element) {
-  if (!game.settings.get(MODULE.ID, MODULE.SETTINGS.PRIVACY_ENABLED)) return true;
+  if (!cachedSetting(MODULE.SETTINGS.PRIVACY_ENABLED)) return true;
   if (viewer.isGM || combatant.testUserPermission(viewer, 'OWNER')) return true;
   if (combatant.hidden) return false;
-  const rule = game.settings.get(MODULE.ID, MODULE.SETTINGS.PRIVACY_RULES)[DISPOSITION_NAMES[combatantDisposition(combatant)].toLowerCase()];
+  const rule = cachedSetting(MODULE.SETTINGS.PRIVACY_RULES)[DISPOSITION_NAMES[combatantDisposition(combatant)].toLowerCase()];
   if (element === 'health') return rule.health === 'exact';
   if (element === 'estimate') return rule.health !== 'hidden';
   return rule[element];

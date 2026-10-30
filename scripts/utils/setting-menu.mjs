@@ -15,6 +15,22 @@ export function onSettingChange(keys, callback) {
   for (const hook of ['createSetting', 'updateSetting']) Hooks.on(hook, (setting) => run(setting.key));
 }
 
+/** @type {Map<string, *>} Roll Call setting values read on hot paths, each dropped when its setting changes. */
+const settingCache = new Map();
+const forget = (id) => id.startsWith(`${MODULE.ID}.`) && settingCache.delete(id.slice(MODULE.ID.length + 1));
+Hooks.on('clientSettingChanged', forget);
+for (const hook of ['createSetting', 'updateSetting']) Hooks.on(hook, (setting) => forget(setting.key));
+
+/**
+ * Cached Roll Call setting value, for code that runs on every token refresh. Callers must not mutate the result.
+ * @param {string} key Roll Call setting key.
+ * @returns {*} Setting value.
+ */
+export function cachedSetting(key) {
+  if (!settingCache.has(key)) settingCache.set(key, game.settings.get(MODULE.ID, key));
+  return settingCache.get(key);
+}
+
 /**
  * Form markup for a setting field.
  * @param {foundry.data.fields.DataField} field The field.
