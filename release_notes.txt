@@ -1,9 +1,3 @@
-## New Features
-
-- Health estimate labels now render above all tokens and are removed when the token is deleted
-- New Player Dock Visibility world setting with Show on Combat Start and Show on Encounter Creation choices; before combat starts, the Blade and Codex views show "Not Started" in place of the round number
-- The dock now repositions when the left UI changes size or style, when the sidebar tab changes, and when panels are added to or resized in the left UI column
-
 ## Bug Fixes
 
-- Marking a combatant defeated from the dock no longer applies the defeated status to the base actor when the combatant's token was deleted and the actor is unlinked; auto-defeat skips combatants without a token
+- Health estimate labels and privacy checks now cache their settings instead of reading them on every token refresh, reducing canvas overhead in busy scenes

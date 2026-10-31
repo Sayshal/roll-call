@@ -1,9 +1,3 @@
-## New Features
-
-- Health estimate labels render above all tokens.
-- The dock repositions when the left UI changes size.
-- Player Dock Visibility setting shows the dock on encounter creation.
-
 ## Bug Fixes
 
 - 1 bug squashed
