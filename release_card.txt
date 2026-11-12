@@ -1,3 +1,7 @@
+## New Features
+
+- New Token Bars in Combat setting shows combatant token bars during a started combat
+
 ## Bug Fixes
 
 - 1 bug squashed

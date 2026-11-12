@@ -1,3 +1,12 @@
+## New Features
+
+- New world setting Token Bars in Combat (Default, On Hover, Always) shows combatant token bars during a started combat. Privacy rules still apply. Tokens with bar display set to None stay hidden. Token data is not changed
+
 ## Bug Fixes
 
-- Health estimate labels and privacy checks now cache their settings instead of reading them on every token refresh, reducing canvas overhead in busy scenes
+- The dock no longer shows the wrong combatant as active with End Turn after an initiative change re-sorts the turn order. This covers a combatant added mid-round that rolls higher than the current one and a GM drag-reorder in the dock
+
+## Changes
+
+- Player clients skip privacy settings reads when there is no viewed combat or it has no combatants
+- Verified on dnd5e 6.1.0: combat recovery, legendary actions, lair initiative and summon grouping work without changes

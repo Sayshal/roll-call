@@ -81,7 +81,7 @@ export class RollCallSettings extends ApplicationV2 {
             MODULE.SETTINGS.ON_DECK_IMAGE
           ]
         },
-        { keys: [MODULE.SETTINGS.HEALTH_CANVAS, MODULE.SETTINGS.HEALTH_SCALE] },
+        { keys: [MODULE.SETTINGS.HEALTH_CANVAS, MODULE.SETTINGS.HEALTH_SCALE, MODULE.SETTINGS.HEALTH_BARS] },
         { keys: [MODULE.SETTINGS.TARGET_ICONS, MODULE.SETTINGS.SUMMON_LINES] }
       ]
     },

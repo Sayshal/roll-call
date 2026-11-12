@@ -254,6 +254,12 @@ export function registerSettings() {
     scope: 'world',
     type: displayModeField(undefined, 'hover')
   });
+  r(MODULE.ID, MODULE.SETTINGS.HEALTH_BARS, {
+    name: 'ROLLCALL.Settings.HealthBars.Name',
+    hint: 'ROLLCALL.Settings.HealthBars.Hint',
+    scope: 'world',
+    type: new StringField({ initial: 'default', required: true, blank: false, choices: { default: 'ATLAS.Common.Default', hover: 'ROLLCALL.Dock.Mode.Hover', always: 'ATLAS.Common.Always' } })
+  });
   r(MODULE.ID, MODULE.SETTINGS.HEALTH_SCALE, {
     name: 'ROLLCALL.Settings.HealthScale.Name',
     hint: 'ROLLCALL.Settings.HealthScale.Hint',
