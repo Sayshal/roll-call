@@ -42,6 +42,7 @@ const SETTINGS = {
   FOCUS_ENABLED: 'focusEnabled',
   FOCUS_ON_DEVICE: 'focusOnDevice',
   FOCUS_SELECTORS: 'focusSelectors',
+  HEALTH_BARS: 'healthBars',
   HEALTH_BUCKETS: 'healthBuckets',
   HEALTH_CANVAS: 'healthCanvas',
   HEALTH_ESTIMATE_ENABLED: 'healthEstimateEnabled',

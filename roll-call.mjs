@@ -6,6 +6,7 @@ import {
   BulkAdd,
   CoreSettings,
   FocusMode,
+  HealthBars,
   HealthEstimate,
   Initiative,
   Keybindings,
@@ -54,6 +55,7 @@ Hooks.once('init', () => {
   RollCallDock.register();
   Privacy.register(atlas);
   HealthEstimate.register();
+  HealthBars.register();
   SidebarTab.register();
   CoreSettings.register();
   TurnMarkers.register();

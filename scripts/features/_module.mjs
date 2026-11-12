@@ -3,6 +3,7 @@ export * from './bulk-add.mjs';
 export * from './core-settings.mjs';
 export * from './dock/dock.mjs';
 export * from './focus-mode.mjs';
+export * from './health-bars.mjs';
 export * from './health-estimate.mjs';
 export * from './initiative.mjs';
 export * from './keybindings.mjs';

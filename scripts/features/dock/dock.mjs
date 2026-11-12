@@ -76,6 +76,9 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
   /** @type {Set<string>} Card parts waiting for the next batched render. */
   #pendingCards = new Set();
 
+  /** Refresh after the current document operation settles, so a combat's turns are re-sorted before the dock reads them. */
+  #queueRefresh = foundry.utils.debounce(() => this.refresh(), 20);
+
   /** @type {Map<string, {face: string, body: HTMLElement}>} Each re-rendered card's shown combatant and a copy of its face from before the render, keyed by part id, so a card flips when its face changes. */
   #faces = new Map();
 
@@ -182,7 +185,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
       rcStack: MODULE.TEMPLATES.DOCK.STACK
     });
     const dock = new this();
-    const refresh = foundry.utils.debounce(() => dock.refresh(), 20);
+    const refresh = () => dock.#queueRefresh();
     for (const hook of ['ready', 'canvasReady', 'createCombat', 'deleteCombat', 'createCombatant', 'deleteCombatant', 'updateCombatantGroup']) Hooks.on(hook, refresh);
     Hooks.on('updateCombat', dock.#onUpdateCombat.bind(dock));
     Hooks.on('updateCombatant', dock.#onUpdateCombatant.bind(dock));
@@ -364,7 +367,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
    */
   #onUpdateCombatant(combatant, changes) {
     if (combatant.combat !== viewedCombat()) return;
-    if (['initiative', 'hidden', 'defeated'].some((key) => key in changes)) this.refresh();
+    if (['initiative', 'hidden', 'defeated'].some((key) => key in changes)) this.#queueRefresh();
     else this.#renderCards((c) => c === combatant);
   }
 
