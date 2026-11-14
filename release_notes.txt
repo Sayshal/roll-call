@@ -1,6 +1,9 @@
 ## New Features
 
 - New world setting Token Bars in Combat (Default, On Hover, Always) shows combatant token bars during a started combat. Privacy rules still apply. Tokens with bar display set to None stay hidden. Token data is not changed
+- New world setting Card Order (Follow Style, Active First, Turn Order) sets how dock cards line up for everyone. Follow Style keeps each dock style's own order. The Codex view now shows the next-round divider in Active First order
+- While a hidden combatant is acting, players see a single Hidden Turn card in the active slot instead of their own card leading the dock. The GM does not see it
+- New world setting Lock Movement Off-Turn stops players moving combat tokens outside their own turn. Tokens grouped with the active combatant and tokens not in the combat can still move. Repeated attempts show one warning
 
 ## Bug Fixes
 

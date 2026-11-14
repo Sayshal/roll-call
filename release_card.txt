@@ -1,6 +1,9 @@
 ## New Features
 
 - New Token Bars in Combat setting shows combatant token bars during a started combat
+- New Card Order setting picks how dock cards line up
+- Players see a Hidden Turn card while a hidden combatant acts
+- New Lock Movement Off-Turn setting
 
 ## Bug Fixes
 
