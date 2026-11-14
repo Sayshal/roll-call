@@ -85,6 +85,17 @@ export function registerSettings() {
     config: true,
     type: new StringField({ initial: 'blade', required: true, blank: false, choices: { blade: 'ROLLCALL.View.Blade', codex: 'ROLLCALL.View.Codex' } })
   });
+  r(MODULE.ID, MODULE.SETTINGS.DOCK_ORDER, {
+    name: 'ROLLCALL.Settings.DockOrder.Name',
+    hint: 'ROLLCALL.Settings.DockOrder.Hint',
+    scope: 'world',
+    type: new StringField({
+      initial: 'view',
+      required: true,
+      blank: false,
+      choices: { view: 'ROLLCALL.Settings.DockOrder.View', activeFirst: 'ROLLCALL.Settings.DockOrder.ActiveFirst', fixed: 'ROLLCALL.Settings.DockOrder.Fixed' }
+    })
+  });
   r(MODULE.ID, MODULE.SETTINGS.DOCK_ART, {
     name: 'ROLLCALL.Settings.DockArt.Name',
     hint: 'ROLLCALL.Settings.DockArt.Hint',
@@ -399,6 +410,12 @@ export function registerSettings() {
     scope: 'world',
     requiresReload: true,
     type: new BooleanField({ initial: true })
+  });
+  r(MODULE.ID, MODULE.SETTINGS.MOVE_LOCK, {
+    name: 'ROLLCALL.Settings.MoveLock.Name',
+    hint: 'ROLLCALL.Settings.MoveLock.Hint',
+    scope: 'world',
+    type: new BooleanField({ initial: false })
   });
   r(MODULE.ID, MODULE.SETTINGS.LAIR_PROMPT, {
     name: 'ROLLCALL.Settings.LairPrompt.Name',

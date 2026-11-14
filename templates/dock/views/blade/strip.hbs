@@ -49,6 +49,10 @@
     </div>
   {{/if}}
   {{#each events}}{{> rcEvent}}{{/each}}
+  {{#if hiddenTurn}}
+    <div class="rc-hidden-turn is-active" style="order: {{hiddenTurn.order}}"><span class="rc-upright"><i class="fa-solid fa-eye-slash"
+          aria-hidden="true"></i>{{localize "ROLLCALL.Dock.HiddenTurn"}}</span></div>
+  {{/if}}
   {{#if divider}}
     <div class="rc-divider" style="order: {{divider.order}}"><span class="rc-upright">{{divider.label}}</span></div>
   {{/if}}

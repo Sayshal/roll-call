@@ -22,6 +22,7 @@ export class RollCallSettings extends ApplicationV2 {
           toggle: MODULE.SETTINGS.DOCK_ENABLED,
           keys: [
             MODULE.SETTINGS.DOCK_VIEW,
+            MODULE.SETTINGS.DOCK_ORDER,
             MODULE.SETTINGS.DOCK_ART,
             MODULE.SETTINGS.DOCK_MINIMAL,
             MODULE.SETTINGS.DOCK_TUCK,
@@ -65,7 +66,10 @@ export class RollCallSettings extends ApplicationV2 {
     {
       id: 'encounter',
       icon: 'dungeon',
-      sections: [{ toggle: MODULE.SETTINGS.ROUND_EVENTS_ENABLED, keys: [MODULE.SETTINGS.LAIR_PROMPT] }, { keys: [MODULE.SETTINGS.VS_SCREEN, MODULE.SETTINGS.LINK_SCENE, MODULE.SETTINGS.AUTO_DEFEAT] }]
+      sections: [
+        { toggle: MODULE.SETTINGS.ROUND_EVENTS_ENABLED, keys: [MODULE.SETTINGS.LAIR_PROMPT] },
+        { keys: [MODULE.SETTINGS.VS_SCREEN, MODULE.SETTINGS.LINK_SCENE, MODULE.SETTINGS.MOVE_LOCK, MODULE.SETTINGS.AUTO_DEFEAT] }
+      ]
     },
     {
       id: 'canvas',

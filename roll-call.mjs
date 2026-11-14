@@ -11,6 +11,7 @@ import {
   Initiative,
   Keybindings,
   LairActions,
+  MoveLock,
   Nudge,
   Privacy,
   RollCallDock,
@@ -69,6 +70,7 @@ Hooks.once('init', () => {
   FocusMode.register();
   RoundEvents.register(atlas);
   SceneLink.register();
+  MoveLock.register();
   VsScreen.register(atlas);
   SummonLines.register();
   AutoDefeat.register();

@@ -393,6 +393,12 @@
     transform: skewX(var(--roll-call-slant));
   }
 
+  .rc-hidden-turn {
+    width: 5rem;
+    height: 8.25rem;
+    transform: skewX(var(--roll-call-slant));
+  }
+
   .rc-roundline {
     gap: 0.25rem 0.75rem;
     grid-template-columns: 1fr auto;
@@ -430,6 +436,7 @@
 
     .rc-roundline,
     .rc-divider,
+    .rc-hidden-turn,
     .rc-grip,
     .rc-dock-controls {
       width: 0;
@@ -484,6 +491,10 @@
     .rc-grip {
       align-self: stretch;
       height: 1.5rem;
+    }
+
+    .rc-hidden-turn {
+      height: 4rem;
     }
 
     .rc-grip {
@@ -589,7 +600,7 @@
     }
   }
 
-  &.rc-minimal[data-orientation='horizontal'] :is(.rc-divider, .rc-grip) {
+  &.rc-minimal[data-orientation='horizontal'] :is(.rc-divider, .rc-hidden-turn, .rc-grip) {
     height: 2.25rem;
   }
 

@@ -8,6 +8,7 @@ export * from './health-estimate.mjs';
 export * from './initiative.mjs';
 export * from './keybindings.mjs';
 export * from './lair-actions.mjs';
+export * from './move-lock.mjs';
 export * from './nudge.mjs';
 export * from './privacy.mjs';
 export * from './round-events.mjs';

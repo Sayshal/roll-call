@@ -46,6 +46,15 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     return RollCallDock.#VIEWS[game.settings.get(MODULE.ID, MODULE.SETTINGS.DOCK_VIEW)] ?? bladeView;
   }
 
+  /**
+   * Card order: the world setting, or the view's own order when set to follow the view.
+   * @returns {string} 'activeFirst' or 'fixed'.
+   */
+  get #cardOrder() {
+    const order = game.settings.get(MODULE.ID, MODULE.SETTINGS.DOCK_ORDER);
+    return order === 'view' ? this.#view.order : order;
+  }
+
   /** @type {Promise|null} Loading of the partials the card and strip templates use; renders wait for it. */
   static #partials = null;
 
@@ -160,6 +169,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     MODULE.SETTINGS.DOCK_HIDDEN,
     MODULE.SETTINGS.DOCK_LOCKED,
     MODULE.SETTINGS.DOCK_MINIMAL,
+    MODULE.SETTINGS.DOCK_ORDER,
     MODULE.SETTINGS.DOCK_PLAYER_VISIBILITY,
     MODULE.SETTINGS.DOCK_STACKS,
     MODULE.SETTINGS.DOCK_TUCK,
@@ -280,7 +290,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
    * @param {number} scale Scale chosen by the user.
    */
   #fade(placement, scale) {
-    const items = [...this.element.querySelectorAll('.rc-card, .rc-event, .rc-divider')];
+    const items = [...this.element.querySelectorAll('.rc-card, .rc-event, .rc-divider, .rc-hidden-turn')];
     for (const item of items) item.classList.remove('rc-faded', 'rc-fade-start', 'rc-fade-end');
     Object.assign(this.element.style, { minHeight: '', minWidth: '' });
     if (!items.length) return;
@@ -473,7 +483,9 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     context.sides = sideCounts(combat);
     this.#targets = this.#activeTargets(combat);
     context.clock = combat.started && combatClock(combat) ? { total: context.isGM, turn: game.settings.get(MODULE.ID, MODULE.SETTINGS.TURN_DURATION) > 0 } : null;
-    context.divider = this.#view.order === 'activeFirst' && combat.started && turn > 0 ? { order: count - turn, label: _loc('ROLLCALL.Dock.RoundShort', { round: combat.round + 1 }) } : null;
+    const fixed = this.#cardOrder === 'fixed';
+    context.divider = !fixed && combat.started && turn > 0 ? { order: count - turn, label: _loc('ROLLCALL.Dock.RoundShort', { round: combat.round + 1 }) } : null;
+    context.hiddenTurn = combat.started && combat.combatant && !combat.combatant.visible ? { order: fixed ? turn : 0 } : null;
     context.nav = context.isGM && combat.started ? RollCallDock.#NAV : [];
     const eventsOn = game.settings.get(MODULE.ID, MODULE.SETTINGS.ROUND_EVENTS_ENABLED);
     context.events = eventsOn ? this.#prepareEvents(combat) : [];
@@ -504,7 +516,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
   #prepareEvents(combat) {
     const { turns, started } = combat;
     const turn = combat.turn ?? 0;
-    const fixed = this.#view.order === 'fixed';
+    const fixed = this.#cardOrder === 'fixed';
     return upcomingEvents(combat)
       .filter(({ event }) => event.mode === 'reminder')
       .map(({ event, round }) => {
@@ -542,7 +554,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     const isGM = game.user.isGM;
     const index = this.#indexes.get(combatant) ?? 0;
     const turn = combat.turn ?? 0;
-    const fixed = this.#view.order === 'fixed';
+    const fixed = this.#cardOrder === 'fixed';
     let order = index - turn;
     if (fixed) order = index;
     else if (index < turn) order = combat.turns.length - turn + 1 + index;
