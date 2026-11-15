@@ -235,7 +235,10 @@
       box-shadow: 0 0 0.375rem var(--roll-call-ok);
     }
 
-    &.is-acted,
+    &.is-acted {
+      opacity: 0.72;
+    }
+
     &.is-defeated {
       opacity: 0.5;
       filter: grayscale(1);

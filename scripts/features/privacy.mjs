@@ -94,7 +94,7 @@ export class Privacy {
     if (game.user.isGM) return;
     const combat = viewedCombat();
     if (!combat?.combatants.size || !game.settings.get(MODULE.ID, MODULE.SETTINGS.PRIVACY_ENABLED) || !game.settings.get(MODULE.ID, MODULE.SETTINGS.HIDE_UNTIL_SEEN)) return;
-    const seen = (combat?.combatants ?? []).filter(
+    const seen = combat.combatants.filter(
       (combatant) => combatant.hidden && combatant.getFlag(MODULE.ID, MODULE.FLAGS.AUTO_HIDDEN) && !Privacy.#reported.has(combatant.id) && combatant.token?.object?.isVisible
     );
     if (!seen.length || !game.users.activeGM) return;

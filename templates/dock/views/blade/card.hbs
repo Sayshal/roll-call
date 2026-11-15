@@ -28,8 +28,8 @@
         {{#each card.effects}}<img src="{{img}}" alt="{{name}}" data-tooltip="{{name}}">{{/each}}
       </div>
     {{/if}}
-    {{#if card.stack}}{{> rcStack stack=card.stack upright="rc-upright"}}{{/if}}
     <div class="rc-plate">
+      {{#if card.stack}}{{> rcStack stack=card.stack upright="rc-upright"}}{{/if}}
       {{#if card.legendary}}{{> rcLegendary legendary=card.legendary upright="rc-upright"}}{{/if}}
       <div class="rc-upright rc-name">{{card.name}}</div>
       {{#if (or card.group card.stack.count)}}
