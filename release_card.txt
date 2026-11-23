@@ -1,3 +1,6 @@
-## Bug Fixes
+## New Features
 
-- 3 bugs squashed
+- Hiding or showing a token now hides or shows its combatants in every combat. Combatants held by Hide Until Seen are skipped
+- New world setting Turn Start Marker (Always, On Hover, Never) draws a faded copy of the active token where it began its turn. Players only see it where they can see that spot
+- Shift-click Next Turn on the dock to end the active card. Shift-click Previous Turn to go back to the first member of the active card, or back a card
+- When the last combatant is removed from an encounter, the GM is asked whether to end it

@@ -1,9 +1,6 @@
-## Bug Fixes
+## New Features
 
-- Blade view: the stack portraits on a stacked card no longer overlap a two-line name, such as a masked name a player sees
-- Dock stack minis that have acted are dimmed but keep their color. Defeated minis stay grey and dimmer
-- Select Token on Your Turn can be switched on or off while Turn Reminders is off. It sat in the reminders group of the settings panel and was locked, though it always ran on its own
-
-## Changes
-
-- Removed an unused fallback in the hide-until-seen check
+- Hiding or showing a token now hides or shows its combatants in every combat. Combatants held by Hide Until Seen are skipped
+- New world setting Turn Start Marker (Always, On Hover, Never) draws a faded copy of the active token where it began its turn. Players only see it where they can see that spot
+- Shift-click Next Turn on the dock to end the active card. Shift-click Previous Turn to go back to the first member of the active card, or of the previous card
+- When the last combatant is removed from an encounter, the GM is asked whether to end it
