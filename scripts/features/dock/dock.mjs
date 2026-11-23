@@ -102,12 +102,12 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
       endCombat: RollCallDock.#onCombatControl,
       endTurn: RollCallDock.#onEndTurn,
       nextRound: RollCallDock.#onCombatControl,
-      nextTurn: RollCallDock.#onCombatControl,
+      nextTurn: RollCallDock.#onTurnNav,
       nudge: RollCallDock.#onNudge,
       pan: RollCallDock.#onPan,
       ping: RollCallDock.#onPing,
       previousRound: RollCallDock.#onCombatControl,
-      previousTurn: RollCallDock.#onCombatControl,
+      previousTurn: RollCallDock.#onTurnNav,
       removeEvent: RollCallDock.#onRemoveEvent,
       rollAll: RollCallDock.#onCombatControl,
       rollInitiative: RollCallDock.#onRollInitiative,
@@ -119,11 +119,14 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     }
   };
 
+  /** @type {Set<string>} Ids of combats whose end prompt is open. */
+  static #ending = new Set();
+
   /** @type {object[]} GM turn and round navigation buttons. */
   static #NAV = [
     { action: 'previousRound', icon: 'fa-angles-left', label: 'COMBAT.RoundPrev' },
-    { action: 'previousTurn', icon: 'fa-angle-left', label: 'COMBAT.TurnPrev' },
-    { action: 'nextTurn', icon: 'fa-angle-right', label: 'COMBAT.TurnNext', cta: true },
+    { action: 'previousTurn', icon: 'fa-angle-left', label: 'COMBAT.TurnPrev', tooltip: 'ROLLCALL.Dock.PreviousTurnStack' },
+    { action: 'nextTurn', icon: 'fa-angle-right', label: 'COMBAT.TurnNext', tooltip: 'ROLLCALL.Dock.NextTurnStack', cta: true },
     { action: 'nextRound', icon: 'fa-angles-right', label: 'COMBAT.RoundNext' }
   ];
 
@@ -197,6 +200,7 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     const dock = new this();
     const refresh = () => dock.#queueRefresh();
     for (const hook of ['ready', 'canvasReady', 'createCombat', 'deleteCombat', 'createCombatant', 'deleteCombatant', 'updateCombatantGroup']) Hooks.on(hook, refresh);
+    Hooks.on('deleteCombatant', this.#promptEnd);
     Hooks.on('updateCombat', dock.#onUpdateCombat.bind(dock));
     Hooks.on('updateCombatant', dock.#onUpdateCombatant.bind(dock));
     Hooks.on('updateActor', (actor, changes) => ['name', 'img', 'system'].some((key) => key in changes) && dock.#renderCards((combatant) => combatant.actor === actor));
@@ -231,6 +235,20 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
       Hooks.on(`close${app}`, () => dock.rendered && dock.#reposition());
     }
     Hooks.on('3ds-atlas.themeChanged', ({ moduleId } = {}) => moduleId === MODULE.ID && dock.rendered && dock.render());
+  }
+
+  /**
+   * Ask the GM who removed an encounter's last combatant whether to end it, once per removal.
+   * @param {Combatant} combatant The deleted combatant.
+   * @param {object} _options Deletion options.
+   * @param {string} userId The deleting user's id.
+   */
+  static async #promptEnd(combatant, _options, userId) {
+    const combat = combatant.parent;
+    if (userId !== game.user.id || !game.user.isGM || combat.combatants.size || RollCallDock.#ending.has(combat.id)) return;
+    RollCallDock.#ending.add(combat.id);
+    await combat.endCombat();
+    RollCallDock.#ending.delete(combat.id);
   }
 
   /** Open, re-render or close the dock to match the viewed combat and this client's opt-out. */
@@ -948,7 +966,37 @@ export class RollCallDock extends HandlebarsApplicationMixin(ApplicationV2) {
     const combat = viewedCombat();
     const members = this.#stacks.get(target.closest('[data-application-part]')?.dataset.applicationPart.slice(5)) ?? [];
     if (!event.shiftKey || members.length < 2) return combat.nextTurn();
-    return getAdapter().endTurnsThrough(combat, Math.max(...members.map((member) => combat.turns.indexOf(member))));
+    return getAdapter().endTurnsThrough(combat, Math.max(...RollCallDock.#turnIndices(combat, members)));
+  }
+
+  /**
+   * Step the turn, or with Shift held, end the active card or rewind to the first member of the active or previous card.
+   * @this {RollCallDock}
+   * @param {PointerEvent} event The click event.
+   * @param {HTMLElement} target The button.
+   * @returns {Promise<Combat>} The updated combat.
+   */
+  static #onTurnNav(event, target) {
+    const combat = viewedCombat();
+    const action = target.dataset.action;
+    const cards = [...this.#stacks.values()];
+    const active = cards.findIndex((members) => members.includes(combat.combatant));
+    if (!event.shiftKey || active < 0) return combat[action]();
+    const adapter = getAdapter();
+    if (action === 'nextTurn') return adapter.endTurnsThrough(combat, Math.max(...RollCallDock.#turnIndices(combat, cards[active])));
+    const first = Math.min(...RollCallDock.#turnIndices(combat, cards[active]));
+    if (combat.turn > first) return adapter.rewindTurnsTo(combat, first);
+    return adapter.rewindTurnsTo(combat, active ? Math.min(...RollCallDock.#turnIndices(combat, cards[active - 1])) : -1);
+  }
+
+  /**
+   * Turn indices of a card's members.
+   * @param {Combat} combat The combat.
+   * @param {Combatant[]} members The card's members.
+   * @returns {number[]} Indices in the turn order.
+   */
+  static #turnIndices(combat, members) {
+    return members.map((member) => combat.turns.indexOf(member));
   }
 
   /**

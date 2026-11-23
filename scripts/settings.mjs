@@ -443,6 +443,13 @@ export function registerSettings() {
     requiresReload: true,
     type: displayModeField(undefined, 'hover')
   });
+  r(MODULE.ID, MODULE.SETTINGS.TURN_ORIGIN, {
+    name: 'ROLLCALL.Settings.TurnOrigin.Name',
+    hint: 'ROLLCALL.Settings.TurnOrigin.Hint',
+    scope: 'world',
+    requiresReload: true,
+    type: displayModeField(undefined, 'never')
+  });
   r(MODULE.ID, MODULE.SETTINGS.AUTO_DEFEAT, {
     name: 'ROLLCALL.Settings.AutoDefeat.Name',
     hint: 'ROLLCALL.Settings.AutoDefeat.Hint',

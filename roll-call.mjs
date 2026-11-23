@@ -8,6 +8,7 @@ import {
   FocusMode,
   HealthBars,
   HealthEstimate,
+  HiddenSync,
   Initiative,
   Keybindings,
   LairActions,
@@ -20,6 +21,7 @@ import {
   SidebarTab,
   SummonLines,
   TurnMarkers,
+  TurnOrigin,
   TurnReminders,
   TurnTimer,
   VsScreen
@@ -73,7 +75,9 @@ Hooks.once('init', () => {
   MoveLock.register();
   VsScreen.register(atlas);
   SummonLines.register();
+  TurnOrigin.register();
   AutoDefeat.register();
+  HiddenSync.register();
   createGlobalNamespace();
 });
 

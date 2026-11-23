@@ -78,6 +78,7 @@ const SETTINGS = {
   TARGET_ICONS: 'targetIcons',
   TURN_DURATION: 'turnDuration',
   TURN_EXPIRY: 'turnExpiry',
+  TURN_ORIGIN: 'turnOrigin',
   VS_SCREEN: 'vsScreen'
 };
 

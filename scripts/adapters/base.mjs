@@ -79,6 +79,20 @@ export const baseAdapter = {
   },
 
   /**
+   * Rewind to a turn earlier in this round the way core's previous turn does, or to the previous round when the index is negative.
+   * @param {Combat} combat The combat.
+   * @param {number} first Index of the turn to rewind to.
+   * @returns {Promise<Combat>} The updated combat.
+   */
+  rewindTurnsTo(combat, first) {
+    if (first < 0) return combat.previousRound();
+    const updateData = { round: combat.round, turn: first };
+    const updateOptions = { direction: -1, worldTime: { delta: combat.getTimeDelta(combat.round, combat.turn, combat.round, first) } };
+    Hooks.callAll('combatTurn', combat, updateData, updateOptions);
+    return combat.update(updateData, updateOptions);
+  },
+
+  /**
    * Creatures summoned by an actor.
    * @param {Actor} _actor The summoner.
    * @returns {Actor[]} Summoned actors.
